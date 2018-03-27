@@ -11,3 +11,4 @@
 * Scaling of player controls to make it more realistic
 * Cleaning up of code for easier use
 * The creation of a deformable mesh after terrain is loaded, which can be depressed/deformed by player footsteps
+![Screenshot of the block-terrain](https://s18.postimg.org/ajiqbe4sp/Screen_Shot_2018-03-27_at_21.11.18.jpg)
