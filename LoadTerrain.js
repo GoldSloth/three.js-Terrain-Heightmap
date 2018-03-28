@@ -1,4 +1,4 @@
-function loadTerrain(res, sampling, multiplier, scene) {
+function loadTerrain(res, multiplier, scene) {
     var c = document.getElementById('heightMap');
     var ctx = c.getContext('2d')
     var img = document.getElementById('heightImage');
@@ -22,26 +22,42 @@ function loadTerrain(res, sampling, multiplier, scene) {
     console.log(imageData)
 
     var imageResult = [];
-    for (var x=0; x<imageData.length; x+=res) {
-        imageResult.push(imageData.slice(x, x+res))
+    for (var x=0; x<imageData.length; x+=1081) {
+        imageResult.push(imageData.slice(x, x+1081))
     }
     console.log(imageResult)
     var meshArray = []
     console.log('Starting render call')
-    for (var x=0; x<imageResult.length; x += sampling) {
-        console.log('Adding box ' + x)
-        for (var y=0; y<imageResult[x].length; y += sampling) {
-            var colorSetting = ((imageResult[x][y]-minValue)/maxValue)*200
-            var colorMap = 256-Math.floor(colorSetting);
-            var material = new THREE.MeshLambertMaterial({color: 'rgb( 20, ' + colorMap + ', 20)'});
-            var geometry = new THREE.BoxBufferGeometry(1, imageResult[x][y] * multiplier, 1)
-            var cube = new THREE.Mesh(geometry, material)
-            scene.add(cube)
-            meshArray.push(cube)
-            cube.position.x = x/sampling;
-            cube.position.y = (imageResult[x][y]*(multiplier/2))-(10*multiplier)
-            cube.position.z = y/sampling;
+    for (var x=0; x<imageResult.length-res; x+=res) {
+        for (var y=0; y<imageResult[x].length-res; y+=res) {
+            var geom = new THREE.Geometry();
+            var v1 = new THREE.Vector3(x, imageResult[x][y], y)
+            var v2 = new THREE.Vector3(x+res, imageResult[x+res][y], y)
+            var v3 = new THREE.Vector3(x, imageResult[x][y+res], y+res)
+            var v4 = new THREE.Vector3(x+res, imageResult[x+res][y], y)
+            var v5 = new THREE.Vector3(x+res, imageResult[x+res][y+res], y+res)
+            var v6 = new THREE.Vector3(x, imageResult[x][y+res], y+res)
+            geom.vertices.push(v1)
+            geom.vertices.push(v2)
+            geom.vertices.push(v3)
+            geom.vertices.push(v4)
+            geom.vertices.push(v5)
+            geom.vertices.push(v6)
+            
+            geom.faces.push(new THREE.Face3(0, 1, 2))
+            geom.faces.push(new THREE.Face3(3, 4, 5))
+            geom.translate(-imageResult.length, 0, -imageResult[x].length)
+            geom.scale(1, multiplier, 1)
+            geom.computeFaceNormals();
+            geom.computeVertexNormals();
+            var object = new THREE.Mesh(geom, new THREE.MeshLambertMaterial());
+            object.material.side = THREE.DoubleSide;
+            meshArray.push(geom)
+            scene.add(object)
+            
         }
     }
+    console.log(meshArray)
+    console.log('Finished render call')
     return meshArray
 }
