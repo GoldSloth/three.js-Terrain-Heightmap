@@ -6,9 +6,8 @@
 * ***Pointerlock controls*** based from a tutorial documenting the pointerlock control module included with ***three.js***
 
 ## Plans to extend this in the future:
-* Ability to render triangle-strips rather than just blocks
 * More optimisation so heightmaps can be used at a proper resoloution
 * Scaling of player controls to make it more realistic
 * Cleaning up of code for easier use
 * The creation of a deformable mesh after terrain is loaded, which can be depressed/deformed by player footsteps
-[![Screen_Shot_2018-03-27_at_21.11.18.jpg](https://s18.postimg.org/ajiqbe4sp/Screen_Shot_2018-03-27_at_21.11.18.jpg)](https://postimg.org/image/ajiqbe4sl/)
+[![Screen_Shot_2018-03-28_at_21.28.23.jpg](https://s18.postimg.org/srbw1bygp/Screen_Shot_2018-03-28_at_21.28.23.jpg)](https://postimg.org/image/u6dgq1zjp/)(https://postimg.org/image/ajiqbe4sl/)
