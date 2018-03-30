@@ -119,7 +119,7 @@ window.onload = function() {
     scene.add(amblight)
     scene.add(Light)
 
-    var objects = loadTerrain(20, 8, scene)
+    var objects = loadTerrain(20, 2, scene)
     
     function doStuff() {
         requestAnimationFrame(doStuff);

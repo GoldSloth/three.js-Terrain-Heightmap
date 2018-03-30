@@ -3,7 +3,8 @@ function loadTerrain(res, multiplier, scene) {
     var ctx = c.getContext('2d')
     var img = document.getElementById('heightImage');
     ctx.drawImage(img, 0, 0);
-    
+    var sizeWidth = ctx.canvas.clientWidth;
+    var sizeHeight = ctx.canvas.clientHeight;
     var imgData = ctx.getImageData(0, 0, c.width, c.height);
     var data = imgData.data;
     console.log(data)
@@ -22,8 +23,8 @@ function loadTerrain(res, multiplier, scene) {
     console.log(imageData)
 
     var imageResult = [];
-    for (var x=0; x<imageData.length; x+=1081) {
-        imageResult.push(imageData.slice(x, x+1081))
+    for (var x=0; x<imageData.length; x+=sizeWidth) {
+        imageResult.push(imageData.slice(x, x+sizeHeight))
     }
     console.log(imageResult)
     var meshArray = []
