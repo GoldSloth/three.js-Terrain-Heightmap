@@ -53,7 +53,7 @@ function loadTerrain(res, multiplier, scene) {
             geom.computeVertexNormals();
             var object = new THREE.Mesh(geom, new THREE.MeshLambertMaterial());
             object.material.side = THREE.DoubleSide;
-            meshArray.push(geom)
+            meshArray.push(object)
             scene.add(object)
             
         }

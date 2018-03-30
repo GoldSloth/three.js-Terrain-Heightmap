@@ -47,13 +47,13 @@ window.onload = function() {
 
 
     var camera;
-    var width = 1200;
-    var height = 1000;
+    var width = 800;
+    var height = 600;
     var scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, width/height, 0.001, 1000000);
     var controls = new THREE.PointerLockControls(camera);
     scene.add(controls.getObject())
-    
+    var raycaster = new THREE.Raycaster();
     var onKeyDown = function ( event ) {
         switch ( event.keyCode ) {
             case 38: // up
@@ -62,7 +62,8 @@ window.onload = function() {
                 break;
             case 37: // left
             case 65: // a
-                moveLeft = true; break;
+                moveLeft = true;
+                break;
             case 40: // down
             case 83: // s
                 moveBackward = true;
@@ -75,7 +76,8 @@ window.onload = function() {
                 velocity.y += 100;
                 break;
             case 16: // shift
-                velocity.multiplyScalar(3)
+                velocity.copy(velocity.multiplyScalar(3))
+                break;
             case 17: // control
                 velocity.y -= 100;
                 break;
@@ -120,24 +122,62 @@ window.onload = function() {
     scene.add(Light)
 
     var objects = loadTerrain(20, 2, scene)
-    
+    var terrain = new THREE.Object3D()
+    for (var i=0; i < objects.length; i++) {
+        terrain.add(objects[i].clone())
+    }
+    var playerHeight = 10;
+    controls.getObject().position.copy(new THREE.Vector3(-512, 100, -512))
     function doStuff() {
         requestAnimationFrame(doStuff);
         renderer.render(scene, camera);
+        console.log(controls.getObject().position)
+        raycaster.set(controls.getObject().position, (new THREE.Vector3(0, -1, 0)).normalize())
+        var intersections = raycaster.intersectObject(terrain, true)
+        var collisions = []
+        for (i=0; i < intersections.length; i++) {
+            if (intersections[i].distance < playerHeight) {
+                collisions.push(intersections[i])
+            }
+        }
+        console.log(collisions)
+        
         if ( controlsEnabled ) {
             var time = performance.now();
             var delta = ( time - prevTime ) / 1000;
-            velocity.x -= velocity.x * 10.0 * delta;
-            velocity.z -= velocity.z * 10.0 * delta;
-            if ( moveForward ) velocity.z -= 400.0 * delta;
-            if ( moveBackward ) velocity.z += 400.0 * delta;
-            if ( moveLeft ) velocity.x -= 400.0 * delta;
-            if ( moveRight ) velocity.x += 400.0 * delta;
-            controls.getObject().translateX( velocity.x * delta );
-            controls.getObject().translateY( velocity.y * delta );
-            controls.getObject().translateZ( velocity.z * delta );
-            if (velocity.y > 0) {
-                velocity.y -= (velocity.y/10)
+            if (moveForward) {
+                velocity.z -= 60 * delta
+            } else if (moveBackward) {
+                velocity.z += 40 * delta
+            }
+            if (moveRight) {
+                velocity.x += 40 * delta
+            }
+            if (moveLeft) {
+                velocity.x -= 40 * delta
+            }
+            velocity.y -= 50 * delta;
+            controls.getObject().translateX( velocity.x * delta * 6);
+            if (collisions.length == 0) {
+                controls.getObject().translateY( velocity.y * delta * 6);
+            }
+            controls.getObject().translateZ( velocity.z * delta * 6);
+            var cancelThreshold = 5
+            var decelerationFactor = 10
+            if ((velocity.y > cancelThreshold) || (velocity.y < -cancelThreshold)) {
+                velocity.y -= (velocity.y/decelerationFactor)
+            } else {
+                velocity.y = 0
+            }
+            if ((velocity.x > cancelThreshold) || (velocity.x < -cancelThreshold)) {
+                velocity.x -= (velocity.x/decelerationFactor)
+            } else {
+                velocity.x = 0
+            }
+            if ((velocity.z > cancelThreshold) || (velocity.z < -cancelThreshold)) {
+                velocity.z -= (velocity.z/decelerationFactor)
+            } else {
+                velocity.z = 0
             }
             prevTime = time;
             Light.position.copy(controls.getObject().position)
