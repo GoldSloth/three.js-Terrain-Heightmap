@@ -160,6 +160,8 @@ window.onload = function() {
             controls.getObject().translateX( velocity.x * delta * 6);
             if (collisions.length == 0) {
                 controls.getObject().translateY( velocity.y * delta * 6);
+            } else if (collisions[0].distance < playerHeight) {
+                controls.getObject().translateY(playerHeight-collisions[0].distance)
             }
             controls.getObject().translateZ( velocity.z * delta * 6);
             var cancelThreshold = 5
