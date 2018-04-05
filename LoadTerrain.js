@@ -20,8 +20,6 @@ function loadTerrain(res, multiplier, scene) {
             minValue = data[i*4]
         }
     }
-    console.log(imageData)
-
     var imageResult = [];
     for (var x=0; x<imageData.length; x+=sizeWidth) {
         imageResult.push(imageData.slice(x, x+sizeHeight))
@@ -32,12 +30,12 @@ function loadTerrain(res, multiplier, scene) {
     for (var x=0; x<imageResult.length-res; x+=res) {
         for (var y=0; y<imageResult[x].length-res; y+=res) {
             var geom = new THREE.Geometry();
-            var v1 = new THREE.Vector3(x, imageResult[x][y], y)
-            var v2 = new THREE.Vector3(x+res, imageResult[x+res][y], y)
-            var v3 = new THREE.Vector3(x, imageResult[x][y+res], y+res)
-            var v4 = new THREE.Vector3(x+res, imageResult[x+res][y], y)
-            var v5 = new THREE.Vector3(x+res, imageResult[x+res][y+res], y+res)
-            var v6 = new THREE.Vector3(x, imageResult[x][y+res], y+res)
+            var v1 = new THREE.Vector3(x, imageResult[x][y]-minValue, y)
+            var v2 = new THREE.Vector3(x+res, imageResult[x+res][y]-minValue, y)
+            var v3 = new THREE.Vector3(x, imageResult[x][y+res]-minValue, y+res)
+            var v4 = new THREE.Vector3(x+res, imageResult[x+res][y]-minValue, y)
+            var v5 = new THREE.Vector3(x+res, imageResult[x+res][y+res]-minValue, y+res)
+            var v6 = new THREE.Vector3(x, imageResult[x][y+res]-minValue, y+res)
             geom.vertices.push(v1)
             geom.vertices.push(v2)
             geom.vertices.push(v3)

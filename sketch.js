@@ -126,21 +126,11 @@ window.onload = function() {
     for (var i=0; i < objects.length; i++) {
         terrain.add(objects[i].clone())
     }
-    var playerHeight = 10;
+    var playerHeight = 10.0;
     controls.getObject().position.copy(new THREE.Vector3(-512, 100, -512))
-    velocity.y -= 50;
-    controls.getObject().translateY(velocity.y)
     function doStuff() {
         requestAnimationFrame(doStuff);
         renderer.render(scene, camera);
-        raycaster.set(controls.getObject().position, (new THREE.Vector3(0, -1, 0)).normalize())
-        var intersections = raycaster.intersectObject(terrain, true)
-        var collisions = []
-        for (i=0; i < intersections.length; i++) {
-            if (intersections[i].distance < playerHeight) {
-                collisions.push(intersections[i])
-            }
-        }
         if ( controlsEnabled ) {
             var time = performance.now();
             var delta = ( time - prevTime ) / 1000;
@@ -158,27 +148,25 @@ window.onload = function() {
             
             controls.getObject().translateX( velocity.x * delta * 6);
             controls.getObject().translateZ( velocity.z * delta * 6);
-            if (collisions.length == 0) {
+            raycaster.set(controls.getObject().position, (new THREE.Vector3(0, -1, 0)).normalize())
+            var intersections = raycaster.intersectObject(terrain, true)
+            if (intersections.length == 0) {
                 velocity.y -= 10;
                 controls.getObject().translateY(velocity.y * delta)
-            } else if (collisions.length > 0) {
-                console.log(collisions[0].distance)
-                if (collisions[0].distance > playerHeight) {
+            } 
+            if (intersections.length > 0) {
+                console.log(intersections[0].distance)
+                if (intersections[0].distance >= playerHeight) {
                     velocity.y -= 10;
                     controls.getObject().translateY(velocity.y * delta)
-                } else if (collisions[0].distance < playerHeight) {
-                    controls.getObject().translateY(playerHeight -  collisions[0].distance)
-                    console.log('Upwards')
+                } else if (intersections[0].distance < playerHeight) {
+                    controls.getObject().translateY(playerHeight -  intersections[0].distance)
+                    velocity.y = 0
                 }
             }
 
             var cancelThreshold = 5
             var decelerationFactor = 10
-            if ((velocity.y > cancelThreshold) || (velocity.y < -cancelThreshold)) {
-                velocity.y -= (velocity.y/decelerationFactor)
-            } else {
-                velocity.y = 0
-            }
             if ((velocity.x > cancelThreshold) || (velocity.x < -cancelThreshold)) {
                 velocity.x -= (velocity.x/decelerationFactor)
             } else {
