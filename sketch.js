@@ -120,8 +120,10 @@ window.onload = function() {
     var Light = new THREE.PointLight(0xffffff, 0.3)
     scene.add(amblight)
     scene.add(Light)
-
-    var objects = loadTerrain(20, 2, scene)
+    
+// res, multiplier, scene, terrainProfile
+    var objects = loadTerrain(15, 2.5, scene, terrainProfile)
+    
     var terrain = new THREE.Object3D()
     for (var i=0; i < objects.length; i++) {
         terrain.add(objects[i].clone())
@@ -155,7 +157,6 @@ window.onload = function() {
                 controls.getObject().translateY(velocity.y * delta)
             } 
             if (intersections.length > 0) {
-                console.log(intersections[0].distance)
                 if (intersections[0].distance >= playerHeight * 2) {
                     velocity.y -= 10;
                     controls.getObject().translateY(velocity.y * delta)
