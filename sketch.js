@@ -156,11 +156,17 @@ window.onload = function() {
             } 
             if (intersections.length > 0) {
                 console.log(intersections[0].distance)
-                if (intersections[0].distance >= playerHeight) {
+                if (intersections[0].distance >= playerHeight * 2) {
                     velocity.y -= 10;
                     controls.getObject().translateY(velocity.y * delta)
-                } else if (intersections[0].distance < playerHeight) {
-                    controls.getObject().translateY(playerHeight -  intersections[0].distance)
+                } else if (intersections[0].distance >= playerHeight * 1.2){
+                    velocity.y -= 1;
+                    controls.getObject().translateY(velocity.y * delta)
+                } else if (intersections[0].distance >= playerHeight){
+                    velocity.y -= 0.5;
+                    controls.getObject().translateY(velocity.y * delta)
+                } else if (intersections[0].distance <= playerHeight) {
+                    controls.getObject().translateY(playerHeight - intersections[0].distance)
                     velocity.y = 0
                 }
             }
