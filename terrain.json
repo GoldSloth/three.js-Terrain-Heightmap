@@ -2,7 +2,7 @@ terrainProfile = [{
     "id": 0,
     "name": "Water",
     "level": 0.22,
-    "colour": "rgb(0, 192, 255)"
+    "colour": "rgb(27, 83, 173)"
 },
 {
     "id": 1,

@@ -47,8 +47,8 @@ window.onload = function() {
 
 
     var camera;
-    var width = 800;
-    var height = 600;
+    var width = 1000;
+    var height = 700;
     var scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, width/height, 0.001, 1000000);
     var controls = new THREE.PointerLockControls(camera);
@@ -118,6 +118,7 @@ window.onload = function() {
     document.getElementById("render").appendChild(renderer.domElement);
     var amblight = new THREE.AmbientLight(0xffffff, 0.3)
     var Light = new THREE.PointLight(0xffffff, 0.3)
+
     scene.add(amblight)
     scene.add(Light)
     
@@ -128,6 +129,13 @@ window.onload = function() {
     for (var i=0; i < objects.length; i++) {
         terrain.add(objects[i].clone())
     }
+    var worldSize = Math.sqrt(objects.length)*15
+    console.log(worldSize)
+    var waterPlane = new THREE.PlaneGeometry(worldSize, worldSize)
+    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)"})
+    var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
+    waterMesh.material.side = THREE.DoubleSide;
+    scene.add(waterMesh)
     var playerHeight = 10.0;
     controls.getObject().position.copy(new THREE.Vector3(-512, 100, -512))
     function doStuff() {
