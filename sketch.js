@@ -3,7 +3,33 @@ var width = 1000;
 var height = 700;
 var camera = new THREE.PerspectiveCamera(75, width/height, 0.001, 1000000);
 var controls = new THREE.PointerLockControls(camera);
+var prevTime = performance.now();
+var velocity = new THREE.Vector3();
 
+function makeChangeToVelocity(changeInVelocity) {
+    velocity = velocity.add(changeInVelocity)
+}
+
+//    var onKeyUp = function ( event ) {
+//        switch( event.keyCode ) {
+//            case 38: // up
+//            case 87: // w
+//                moveForward = false;
+//                break;
+//            case 37: // left
+//            case 65: // a
+//                moveLeft = false;
+//                break;
+//            case 40: // down
+//            case 83: // s
+//                moveBackward = false;
+//                break;
+//            case 39: // right
+//            case 68: // d
+//                moveRight = false;
+//                break;
+//        }
+//    };
 
 window.onload = function() {
     if (!isBrowserCompatible()) {
@@ -11,68 +37,11 @@ window.onload = function() {
         return
     }
 
-    var moveForward = false;
-    var moveBackward = false;
-    var moveLeft = false;
-    var moveRight = false;
-    var prevTime = performance.now();
-    var velocity = new THREE.Vector3();
-
     addPointerLockListeners()
     scene.add(controls.getObject())
     var raycaster = new THREE.Raycaster();
-    var onKeyDown = function ( event ) {
-        switch ( event.keyCode ) {
-            case 38: // up
-            case 87: // w
-                moveForward = true;
-                break;
-            case 37: // left
-            case 65: // a
-                moveLeft = true;
-                break;
-            case 40: // down
-            case 83: // s
-                moveBackward = true;
-                break;
-            case 39: // right
-            case 68: // d
-                moveRight = true;
-                break;
-            case 32: // space
-                velocity.y += 100;
-                break;
-            case 16: // shift
-                velocity.copy(velocity.multiplyScalar(3))
-                break;
-            case 17: // control
-                velocity.y -= 100;
-                break;
-        }
-    };
-    var onKeyUp = function ( event ) {
-        switch( event.keyCode ) {
-            case 38: // up
-            case 87: // w
-                moveForward = false;
-                break;
-            case 37: // left
-            case 65: // a
-                moveLeft = false;
-                break;
-            case 40: // down
-            case 83: // s
-                moveBackward = false;
-                break;
-            case 39: // right
-            case 68: // d
-                moveRight = false;
-                break;
-        }
-    };
-    document.addEventListener( 'keydown', onKeyDown, false );
-    document.addEventListener( 'keyup', onKeyUp, false );
     
+
     window.addEventListener('keydown', function(e) {
     if(e.keyCode == 32 && e.target == document.body) {
         e.preventDefault();
@@ -105,32 +74,23 @@ window.onload = function() {
     scene.add(waterMesh)
     var playerHeight = 10.0;
     controls.getObject().position.copy(new THREE.Vector3(-512, 100, -512))
+    
     function doStuff() {
         requestAnimationFrame(doStuff);
         renderer.render(scene, camera);
         if (controls.enabled) {
             var time = performance.now();
             var delta = ( time - prevTime ) / 1000;
-            if (moveForward) {
-                velocity.z -= 60 * delta
-            } 
-            if (moveBackward) {
-                velocity.z += 40 * delta
-            }
-            if (moveRight) {
-                velocity.x += 40 * delta
-            }
-            if (moveLeft) {
-                velocity.x -= 40 * delta
-            }
+            velocity.multiplyScalar(delta)
             
-            controls.getObject().translateX( velocity.x * delta * 6);
-            controls.getObject().translateZ( velocity.z * delta * 6);
+            controls.getObject().translateX(velocity.x);
+            controls.getObject().translateZ(velocity.z);
             raycaster.set(controls.getObject().position, (new THREE.Vector3(0, -1, 0)).normalize())
+            
             var intersections = raycaster.intersectObject(terrain, true)
             if (intersections.length == 0) {
                 velocity.y -= 10;
-                controls.getObject().translateY(velocity.y * delta)
+                controls.getObject().translateY(velocity.y)
             } 
             if (intersections.length > 0) {
                 if (intersections[0].distance >= playerHeight * 2) {

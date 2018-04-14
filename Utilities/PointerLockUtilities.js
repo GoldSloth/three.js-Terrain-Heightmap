@@ -1,8 +1,10 @@
 function pointerLockChange() {
     if (document.pointerLockElement === document.body || document.mozPointerLockElement === document.body || document.webkitPointerLockElement === document.body) {
         controls.enabled = true
+        document.addEventListener( 'keydown', onKeyDown, false )
     } else {
         controls.enabled = false
+        document.removeEventListener( 'keydown', onKeyDown, false )
     }
 } 
 
