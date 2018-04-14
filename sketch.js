@@ -10,27 +10,6 @@ function makeChangeToVelocity(changeInVelocity) {
     velocity = velocity.add(changeInVelocity)
 }
 
-//    var onKeyUp = function ( event ) {
-//        switch( event.keyCode ) {
-//            case 38: // up
-//            case 87: // w
-//                moveForward = false;
-//                break;
-//            case 37: // left
-//            case 65: // a
-//                moveLeft = false;
-//                break;
-//            case 40: // down
-//            case 83: // s
-//                moveBackward = false;
-//                break;
-//            case 39: // right
-//            case 68: // d
-//                moveRight = false;
-//                break;
-//        }
-//    };
-
 window.onload = function() {
     if (!isBrowserCompatible()) {
         console.log("Sorry, this browser is not compatible.")
@@ -38,16 +17,10 @@ window.onload = function() {
     }
 
     addPointerLockListeners()
+    
     scene.add(controls.getObject())
     var raycaster = new THREE.Raycaster();
-    
 
-    window.addEventListener('keydown', function(e) {
-    if(e.keyCode == 32 && e.target == document.body) {
-        e.preventDefault();
-      }
-    });
-    
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -72,41 +45,65 @@ window.onload = function() {
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
     waterMesh.material.side = THREE.DoubleSide;
     scene.add(waterMesh)
+    
     var playerHeight = 10.0;
-    controls.getObject().position.copy(new THREE.Vector3(-512, 100, -512))
+    controls.getObject().position.copy(new THREE.Vector3(-512, 200, -512))
     
     function doStuff() {
-        requestAnimationFrame(doStuff);
-        renderer.render(scene, camera);
+        requestAnimationFrame(doStuff)
+        renderer.render(scene, camera)
         if (controls.enabled) {
-            var time = performance.now();
-            var delta = ( time - prevTime ) / 1000;
+            var time = performance.now()
+            var delta = ( time - prevTime )/100;
             velocity.multiplyScalar(delta)
             
             controls.getObject().translateX(velocity.x);
+            controls.getObject().translateY(velocity.y);
             controls.getObject().translateZ(velocity.z);
             raycaster.set(controls.getObject().position, (new THREE.Vector3(0, -1, 0)).normalize())
             
             var intersections = raycaster.intersectObject(terrain, true)
-            if (intersections.length == 0) {
-                velocity.y -= 10;
-                controls.getObject().translateY(velocity.y)
-            } 
-            if (intersections.length > 0) {
-                if (intersections[0].distance >= playerHeight * 2) {
-                    velocity.y -= 10;
-                    controls.getObject().translateY(velocity.y * delta)
-                } else if (intersections[0].distance >= playerHeight * 1.2){
-                    velocity.y -= 1;
-                    controls.getObject().translateY(velocity.y * delta)
-                } else if (intersections[0].distance >= playerHeight){
-                    velocity.y -= 0.5;
-                    controls.getObject().translateY(velocity.y * delta)
-                } else if (intersections[0].distance <= playerHeight) {
-                    controls.getObject().translateY(playerHeight - intersections[0].distance)
-                    velocity.y = 0
+            
+            const gravity = 0.5 * delta
+            if(intersections.length>0) {
+                var playerDistanceFromIntersection = intersections[0].distance
+            
+                if(playerDistanceFromIntersection > gravity) {
+                    controls.getObject().translateY(-gravity)
+                } else if(playerDistanceFromIntersection > 0 && playerDistanceFromIntersection < gravity) {
+                    controls.getObject().translateY(-playerDistanceFromIntersection);
+                } else if(playerDistanceFromIntersection < 0) {
+                    controls.getObject().translateY(-playerDistanceFromIntersection + playerHeight);
                 }
             }
+            
+            
+//            controls.getObject().translateY(playerHeight)
+            
+//            if(intersections[0].distance <= playerHeight) {
+//                controls.getObject().translateY(playerHeight - intersections[0].distance)
+//                velocity.y = 0
+//            }
+//            
+//            if (intersections.length == 0) {
+//                velocity.y -= 10;
+//                controls.getObject().translateY(velocity.y * delta)
+//            } 
+//            if (intersections.length > 0) {
+//                if (intersections[0].distance >= playerHeight * 2) {
+//                    velocity.y -= 10;
+//                    controls.getObject().translateY(velocity.y * delta)
+//                } else if (intersections[0].distance >= playerHeight * 1.2){
+//                    velocity.y -= 1;
+//                    controls.getObject().translateY(velocity.y * delta)
+//                } else if (intersections[0].distance >= playerHeight){
+//                    velocity.y -= 0.5;
+//                    controls.getObject().translateY(velocity.y * delta)
+//                } else if (intersections[0].distance <= playerHeight) {
+//                    controls.getObject().translateY(playerHeight - intersections[0].distance)
+//                    velocity.y = 0
+//                }
+//            }
 
             var cancelThreshold = 5
             var decelerationFactor = 10

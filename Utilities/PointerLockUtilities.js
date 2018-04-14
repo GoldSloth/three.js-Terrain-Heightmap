@@ -1,10 +1,12 @@
 function pointerLockChange() {
     if (document.pointerLockElement === document.body || document.mozPointerLockElement === document.body || document.webkitPointerLockElement === document.body) {
         controls.enabled = true
-        document.addEventListener( 'keydown', onKeyDown, false )
+        document.addEventListener( 'keydown', onKeyDown, false)
+        window.addEventListener('keydown', fixPageScroll)        
     } else {
         controls.enabled = false
-        document.removeEventListener( 'keydown', onKeyDown, false )
+        document.removeEventListener( 'keydown', onKeyDown, false)
+        window.removeEventListener('keydown', fixPageScroll) 
     }
 } 
 
@@ -33,3 +35,10 @@ function addPointerLockListeners() {
         }
     }, false )
 }
+
+function fixPageScroll(event) {
+    if(event.keyCode == 32 && event.target == document.body) {
+        event.preventDefault();
+    }
+}
+
