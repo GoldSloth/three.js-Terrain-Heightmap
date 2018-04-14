@@ -1,35 +1,30 @@
+var scene = new THREE.Scene();
+var width = 1000;
+var height = 700;
+var camera = new THREE.PerspectiveCamera(75, width/height, 0.001, 1000000);
+var controls = new THREE.PointerLockControls(camera);
+
+
 window.onload = function() {
     if (!isBrowserCompatible()) {
         console.log("Sorry, this browser is not compatible.")
         return
     }
 
-    addPointerLockListeners()
-    
-
-
-    var controlsEnabled = false;
     var moveForward = false;
     var moveBackward = false;
     var moveLeft = false;
     var moveRight = false;
-    var canJump = false;
     var prevTime = performance.now();
     var velocity = new THREE.Vector3();
 
-
-    var camera;
-    var width = 1000;
-    var height = 700;
-    var scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, width/height, 0.001, 1000000);
-    var controls = new THREE.PointerLockControls(camera);
+    addPointerLockListeners()
     scene.add(controls.getObject())
     var raycaster = new THREE.Raycaster();
     var onKeyDown = function ( event ) {
         switch ( event.keyCode ) {
             case 38: // up
-            case 87: // w
+            case 87: // 
                 moveForward = true;
                 break;
             case 37: // left
@@ -113,7 +108,7 @@ window.onload = function() {
     function doStuff() {
         requestAnimationFrame(doStuff);
         renderer.render(scene, camera);
-        if ( controlsEnabled ) {
+        if (controls.enabled) {
             var time = performance.now();
             var delta = ( time - prevTime ) / 1000;
             if (moveForward) {
@@ -172,3 +167,4 @@ window.onload = function() {
     }
     doStuff()
 }
+
