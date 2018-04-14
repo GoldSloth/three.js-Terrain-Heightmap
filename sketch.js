@@ -24,7 +24,7 @@ window.onload = function() {
     var onKeyDown = function ( event ) {
         switch ( event.keyCode ) {
             case 38: // up
-            case 87: // 
+            case 87: // w
                 moveForward = true;
                 break;
             case 37: // left
@@ -113,7 +113,8 @@ window.onload = function() {
             var delta = ( time - prevTime ) / 1000;
             if (moveForward) {
                 velocity.z -= 60 * delta
-            } else if (moveBackward) {
+            } 
+            if (moveBackward) {
                 velocity.z += 40 * delta
             }
             if (moveRight) {
