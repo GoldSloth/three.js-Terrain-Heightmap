@@ -3,37 +3,9 @@ window.onload = function() {
         console.log("Sorry, this browser is not compatible.")
         return
     }
-    var element = document.body;
-    var pointerlockchange = function (event) {
-        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-            controlsEnabled = true;
-            controls.enabled = true;
-        } else {
-            controls.enabled = false;
-        };
-    }
-    document.addEventListener( 'pointerlockchange', pointerlockchange, false );
-        document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
-        document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
-        document.getElementById('render').addEventListener( 'click', function ( event ) {
-            // Ask the browser to lock the pointer
-            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-            if ( /Firefox/i.test( navigator.userAgent ) ) {
-                var fullscreenchange = function ( event ) {
-                    if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
-                        document.removeEventListener( 'fullscreenchange', fullscreenchange );
-                        document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
-                        element.requestPointerLock();
-                    }
-                };
-                    document.addEventListener( 'fullscreenchange', fullscreenchange, false );
-                    document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
-                    element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-                    element.requestFullscreen();
-                } else {
-                    element.requestPointerLock();
-                }
-            }, false );
+
+    addPointerLockListeners()
+    
 
 
     var controlsEnabled = false;
