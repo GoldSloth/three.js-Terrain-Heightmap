@@ -1,3 +1,7 @@
+function makeChangeToVelocity(changeInVelocity) {
+    velocity = velocity.add(changeInVelocity)
+}
+
 function onKeyDown(event) {
     var changeInVelocity = new THREE.Vector3()
     switch ( event.keyCode ) {
@@ -33,3 +37,4 @@ function onKeyDown(event) {
     }
     makeChangeToVelocity(changeInVelocity)
 }
+

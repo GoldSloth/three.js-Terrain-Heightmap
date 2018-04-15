@@ -1,14 +1,10 @@
 var scene = new THREE.Scene();
 var width = 1000;
 var height = 700;
-var camera = new THREE.PerspectiveCamera(75, width/height, 0.001, 1000000);
+var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000000);
 var controls = new THREE.PointerLockControls(camera);
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
-
-function makeChangeToVelocity(changeInVelocity) {
-    velocity = velocity.add(changeInVelocity)
-}
 
 window.onload = function() {
     if (!isBrowserCompatible()) {
@@ -44,6 +40,10 @@ window.onload = function() {
     var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)"})
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
     waterMesh.material.side = THREE.DoubleSide;
+    waterMesh.rotateX(THREE.Math.degToRad(90))
+    waterMesh.position.x -= worldSize/2
+    waterMesh.position.z -= worldSize/2
+    waterMesh.position.y += 50
     scene.add(waterMesh)
     
     var playerHeight = 10.0;
