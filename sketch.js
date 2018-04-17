@@ -80,47 +80,6 @@ window.onload = function() {
                 controls.getObject().translateY(-10);
             }
             
-            
-            
-//            controls.getObject().translateY(playerHeight)
-            
-//            if(intersections[0].distance <= playerHeight) {
-//                controls.getObject().translateY(playerHeight - intersections[0].distance)
-//                velocity.y = 0
-//            }
-//            
-//            if (intersections.length == 0) {
-//                velocity.y -= 10;
-//                controls.getObject().translateY(velocity.y * delta)
-//            } 
-//            if (intersections.length > 0) {
-//                if (intersections[0].distance >= playerHeight * 2) {
-//                    velocity.y -= 10;
-//                    controls.getObject().translateY(velocity.y * delta)
-//                } else if (intersections[0].distance >= playerHeight * 1.2){
-//                    velocity.y -= 1;
-//                    controls.getObject().translateY(velocity.y * delta)
-//                } else if (intersections[0].distance >= playerHeight){
-//                    velocity.y -= 0.5;
-//                    controls.getObject().translateY(velocity.y * delta)
-//                } else if (intersections[0].distance <= playerHeight) {
-//                    controls.getObject().translateY(playerHeight - intersections[0].distance)
-//                    velocity.y = 0
-//                }
-//            }
-
-            var cancelThreshold = 5
-            var decelerationFactor = 10
-            if ((velocity.x > cancelThreshold) || (velocity.x < -cancelThreshold)) {
-                velocity.x -= (velocity.x/decelerationFactor)
-            } else {
-                velocity.x = 0
-            }
-            if ((velocity.z > cancelThreshold) || (velocity.z < -cancelThreshold)) {
-                velocity.z -= (velocity.z/decelerationFactor)
-            } else {
-                velocity.z = 0
-            }
             prevTime = time;
             Light.position.copy(controls.getObject().position)
             Light.lookAt(0, 0, 0)
