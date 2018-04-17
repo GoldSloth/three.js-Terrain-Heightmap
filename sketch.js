@@ -37,13 +37,14 @@ window.onload = function() {
     var worldSize = Math.sqrt(objects.length)*15
     console.log(worldSize)
     var waterPlane = new THREE.PlaneGeometry(worldSize, worldSize)
-    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)"})
+    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", depthWrite: false})
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
+    waterMesh.renderOrder = 1
     waterMesh.material.side = THREE.DoubleSide;
     waterMesh.rotateX(THREE.Math.degToRad(90))
     waterMesh.position.x -= worldSize/2
     waterMesh.position.z -= worldSize/2
-    waterMesh.position.y += 50
+    waterMesh.position.y += 45
     scene.add(waterMesh)
     
     var playerHeight = 10.0;
@@ -66,16 +67,19 @@ window.onload = function() {
             
             const gravity = 0.5 * delta
             if(intersections.length>0) {
-                var playerDistanceFromIntersection = intersections[0].distance
+                var playerDistanceFromIntersection = intersections[0].distance - playerHeight
             
                 if(playerDistanceFromIntersection > gravity) {
                     controls.getObject().translateY(-gravity)
                 } else if(playerDistanceFromIntersection > 0 && playerDistanceFromIntersection < gravity) {
                     controls.getObject().translateY(-playerDistanceFromIntersection);
                 } else if(playerDistanceFromIntersection < 0) {
-                    controls.getObject().translateY(-playerDistanceFromIntersection + playerHeight);
+                    controls.getObject().translateY(-playerDistanceFromIntersection);
                 }
+            } else {
+                controls.getObject().translateY(-10);
             }
+            
             
             
 //            controls.getObject().translateY(playerHeight)

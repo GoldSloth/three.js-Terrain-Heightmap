@@ -13,13 +13,13 @@ terrainProfile = [{
 {
     "id": 2,
     "name": "Dark Grass",
-    "level": 0.6,
+    "level": 0.5,
     "colour": "rgb(34, 130, 24)"
 },
 {
     "id": 3,
     "name": "Rock",
-    "level": 0.7,
+    "level": 0.66,
     "colour": "rgb(153, 153, 153)"
 },
 {

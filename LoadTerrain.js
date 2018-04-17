@@ -64,9 +64,10 @@ function loadTerrain(res, multiplier, scene, terrainProfile) {
                     break;
                 }
             }
-            var material = new THREE.MeshLambertMaterial()
+            var material = new THREE.MeshLambertMaterial({})
             material.color = color
             var object = new THREE.Mesh(geom, material);
+            object.renderOrder = 0
             object.material.side = THREE.DoubleSide;
             meshArray.push(object)
             scene.add(object)
