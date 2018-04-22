@@ -1,4 +1,4 @@
-function loadTerrain(res, multiplier, scene, terrainProfile) {
+function loadTerrain(res, multiplier, terrainProfile) {
     var c = document.getElementById('heightMap');
     var ctx = c.getContext('2d')
     var img = document.getElementById('heightImage');
@@ -37,6 +37,7 @@ function loadTerrain(res, multiplier, scene, terrainProfile) {
             var v4 = new THREE.Vector3(x+res, imageResult[x+res][y]-minValue, y)
             var v5 = new THREE.Vector3(x+res, imageResult[x+res][y+res]-minValue, y+res)
             var v6 = new THREE.Vector3(x, imageResult[x][y+res]-minValue, y+res)
+            
             var vertices = [v1.clone(), v2.clone(), v3.clone(), v4.clone(), v5.clone(), v6.clone()]
             geom.vertices.push(v1)
             geom.vertices.push(v2)
@@ -47,7 +48,7 @@ function loadTerrain(res, multiplier, scene, terrainProfile) {
             
             geom.faces.push(new THREE.Face3(0, 1, 2))
             geom.faces.push(new THREE.Face3(3, 4, 5))
-            geom.translate(-imageResult.length, 0, -imageResult[x].length)
+            geom.translate(-imageResult.length, -128, -imageResult[x].length)
             geom.scale(1, multiplier, 1)
             geom.computeFaceNormals();
             geom.computeVertexNormals();
@@ -64,9 +65,10 @@ function loadTerrain(res, multiplier, scene, terrainProfile) {
                     break;
                 }
             }
-            var material = new THREE.MeshLambertMaterial()
+            var material = new THREE.MeshLambertMaterial({})
             material.color = color
             var object = new THREE.Mesh(geom, material);
+            object.renderOrder = 0
             object.material.side = THREE.DoubleSide;
             meshArray.push(object)
             scene.add(object)
