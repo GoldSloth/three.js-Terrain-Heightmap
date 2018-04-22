@@ -39,9 +39,7 @@ window.onload = function() {
             
             velocity.multiplyScalar(delta)
             
-            controls.getObject().translateX(velocity.x);
-            controls.getObject().translateZ(velocity.z);
-            controls.getObject().translateY(velocity.y);
+            controls.getObject().translate(velocity);
             
             controls.getObject().translateY(collider.update(delta));
             
