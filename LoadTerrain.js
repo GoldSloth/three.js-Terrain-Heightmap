@@ -1,4 +1,4 @@
-function loadTerrain(res, multiplier, scene, terrainProfile) {
+function loadTerrain(res, multiplier, terrainProfile) {
     var c = document.getElementById('heightMap');
     var ctx = c.getContext('2d')
     var img = document.getElementById('heightImage');

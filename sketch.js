@@ -5,6 +5,9 @@ var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000000);
 var controls = new THREE.PointerLockControls(camera);
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
+var renderer = new THREE.WebGLRenderer();
+scene.add(controls.getObject())
 
 window.onload = function() {
     if (!isBrowserCompatible()) {
@@ -14,38 +17,11 @@ window.onload = function() {
 
     addPointerLockListeners()
     
-    scene.add(controls.getObject())
-    var raycaster = new THREE.Raycaster();
-
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    document.getElementById("render").appendChild(renderer.domElement);
-    var amblight = new THREE.AmbientLight(0xffffff, 0.3)
-    var Light = new THREE.PointLight(0xffffff, 0.7)
-
-    scene.add(amblight)
-    scene.add(Light)
+    setupRender()
     
-// res, multiplier, scene, terrainProfile
-    var objects = loadTerrain(15, 2.5, scene, terrainProfile)
+    var playerLight = addLights()
     
-    var terrain = new THREE.Object3D()
-    for (var i=0; i < objects.length; i++) {
-        terrain.add(objects[i].clone())
-    }
-    var worldSize = Math.sqrt(objects.length)*15
-    console.log(worldSize)
-    var waterPlane = new THREE.PlaneGeometry(worldSize, worldSize)
-    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", transparent: true, opacity: 0.8})
-    var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
-    waterMesh.renderOrder = 1
-    waterMesh.material.side = THREE.DoubleSide;
-    waterMesh.rotateX(THREE.Math.degToRad(90))
-    waterMesh.position.x -= worldSize/2
-    waterMesh.position.z -= worldSize/2
-    waterMesh.position.y += 80
-    scene.add(waterMesh)
+    var terrain = setupWorld()
     
     var playerHeight = 10.0;
     controls.getObject().position.copy(new THREE.Vector3(-512, 256, -512))
@@ -81,7 +57,7 @@ window.onload = function() {
             }
             
             prevTime = time;
-            Light.position.copy(controls.getObject().position)
+            playerLight.position.copy(controls.getObject().position)
         }
     renderer.render( scene, camera );
     }
