@@ -10,4 +10,4 @@
 * Scaling of player controls to make it more realistic
 * Cleaning up of code for easier use
 * The creation of a deformable mesh after terrain is loaded, which can be depressed/deformed by player footsteps
-[![Screen_Shot_2018-03-28_at_21.28.23.jpg](https://s18.postimg.org/srbw1bygp/Screen_Shot_2018-03-28_at_21.28.23.jpg)](https://postimg.org/image/u6dgq1zjp/)(https://postimg.org/image/ajiqbe4sl/)
+![Fancy terrain](https://preview.ibb.co/dVKJWx/Screen_Shot_2018_04_22_at_19_04_04.jpg)
