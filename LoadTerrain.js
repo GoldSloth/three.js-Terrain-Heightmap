@@ -69,6 +69,7 @@ function loadTerrain(res, multiplier, scene, terrainProfile) {
             var object = new THREE.Mesh(geom, material);
             object.renderOrder = 0
             object.material.side = THREE.DoubleSide;
+            object.position -= 256
             meshArray.push(object)
             scene.add(object)
             

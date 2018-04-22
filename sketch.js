@@ -22,7 +22,7 @@ window.onload = function() {
     renderer.setPixelRatio(window.devicePixelRatio);
     document.getElementById("render").appendChild(renderer.domElement);
     var amblight = new THREE.AmbientLight(0xffffff, 0.3)
-    var Light = new THREE.PointLight(0xffffff, 0.3)
+    var Light = new THREE.PointLight(0xffffff, 0.7)
 
     scene.add(amblight)
     scene.add(Light)
@@ -37,18 +37,18 @@ window.onload = function() {
     var worldSize = Math.sqrt(objects.length)*15
     console.log(worldSize)
     var waterPlane = new THREE.PlaneGeometry(worldSize, worldSize)
-    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", depthWrite: false})
+    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", transparent: true, opacity: 0.8})
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
     waterMesh.renderOrder = 1
     waterMesh.material.side = THREE.DoubleSide;
     waterMesh.rotateX(THREE.Math.degToRad(90))
     waterMesh.position.x -= worldSize/2
     waterMesh.position.z -= worldSize/2
-    waterMesh.position.y += 45
+    waterMesh.position.y += 80
     scene.add(waterMesh)
     
     var playerHeight = 10.0;
-    controls.getObject().position.copy(new THREE.Vector3(-512, 200, -512))
+    controls.getObject().position.copy(new THREE.Vector3(-512, 256, -512))
     
     function doStuff() {
         requestAnimationFrame(doStuff)
@@ -66,7 +66,7 @@ window.onload = function() {
             var intersections = raycaster.intersectObject(terrain, true)
             
             const gravity = 0.5 * delta
-            if(intersections.length>0) {
+            if(intersections.length > 0) {
                 var playerDistanceFromIntersection = intersections[0].distance - playerHeight
             
                 if(playerDistanceFromIntersection > gravity) {
@@ -82,7 +82,6 @@ window.onload = function() {
             
             prevTime = time;
             Light.position.copy(controls.getObject().position)
-            Light.lookAt(0, 0, 0)
         }
     renderer.render( scene, camera );
     }

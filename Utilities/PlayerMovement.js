@@ -3,27 +3,28 @@ function makeChangeToVelocity(changeInVelocity) {
 }
 
 function onKeyDown(event) {
+    const speed = 4
     var changeInVelocity = new THREE.Vector3()
     switch ( event.keyCode ) {
         case 38: // up
         case 87: // w
             //moveForward = true;
-            changeInVelocity.z = -0.7
+            changeInVelocity.z = -1.7*speed
             break
         case 37: // left
         case 65: // a
     //                moveLeft = true;
-            changeInVelocity.x = -0.5
+            changeInVelocity.x = -1*speed
             break
         case 40: // down
         case 83: // s
     //                moveBackward = true;
-            changeInVelocity.z = 0.5
+            changeInVelocity.z = speed
             break
         case 39: // right
         case 68: // d
     //                moveRight = true;
-            changeInVelocity.x = 0.5
+            changeInVelocity.x = speed
             break
         case 32: // space
             changeInVelocity.y = 1;
