@@ -39,10 +39,11 @@ window.onload = function() {
             
             velocity.multiplyScalar(delta)
             
-            controls.getObject().translate(velocity);
+            controls.getObject().translateX(velocity.x);
+            controls.getObject().translateY(velocity.y);
+            controls.getObject().translateZ(velocity.z);
             
             controls.getObject().translateY(collider.update(delta));
-            
             
             playerLight.position.copy(controls.getObject().position)
         }
