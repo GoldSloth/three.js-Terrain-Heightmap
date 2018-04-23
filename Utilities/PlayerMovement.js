@@ -1,41 +1,51 @@
-function makeChangeToVelocity(changeInVelocity) {
-    velocity = velocity.add(changeInVelocity)
+var Key = {
+    _pressed: {},
+
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    W: 87,
+    A: 65,
+    S: 83,
+    D: 63,
+    SPACE: 32,
+    SHIFT: 16,
+    
+    isDown: function(keyCode) {
+        return this._pressed[keyCode];
+    },
+
+    onKeydown: function(event) {
+        this._pressed[event.keyCode] = true;
+    },
+
+    onKeyup: function(event) {
+        delete this._pressed[event.keyCode];
+    }
 }
 
-function onKeyDown(event) {
-    const speed = 1
-    var changeInVelocity = new THREE.Vector3()
-    switch ( event.keyCode ) {
-        case 38: // up
-        case 87: // w
-            //moveForward = true;
-            changeInVelocity.z = -1.7*speed
-            break
-        case 37: // left
-        case 65: // a
-    //                moveLeft = true;
-            changeInVelocity.x = -1*speed
-            break
-        case 40: // down
-        case 83: // s
-    //                moveBackward = true;
-            changeInVelocity.z = speed
-            break
-        case 39: // right
-        case 68: // d
-    //                moveRight = true;
-            changeInVelocity.x = speed
-            break
-        case 32: // space
-            changeInVelocity.y = 10;
-            break
-    //            case 16: // shift
-    //                velocity.copy(velocity.multiplyScalar(3))
-    //                return velocity
-        case 17: // control
-            changeInVelocity.y = -4;
-            break
+function calculateMovement() {
+    const speed = 0.25
+    if (Key.isDown(Key.UP) || Key.isDown(Key.W)) {
+        velocity.z -= 1.7 * speed
     }
-    makeChangeToVelocity(changeInVelocity)
+    if (Key.isDown(Key.DOWN) || Key.isDown(Key.S)) {
+        velocity.z += 1 * speed
+    }
+    if (Key.isDown(Key.LEFT) || Key.isDown(Key.A)) {
+        velocity.x -= 1 * speed
+    }
+    if (Key.isDown(Key.RIGHT) || Key.isDown(Key.D)) {
+        velocity.x += 1 * speed
+    }
+    
+    if (Key.isDown(Key.SPACE)) {
+        velocity.y += 10 * speed
+    }
+    
+    if (Key.isDown(Key.SHIFT)) {
+        velocity.multiplyScalar(1.5)
+    }
 }
 

@@ -1,11 +1,13 @@
 function pointerLockChange() {
     if (document.pointerLockElement === document.body || document.mozPointerLockElement === document.body || document.webkitPointerLockElement === document.body) {
         controls.enabled = true
-        document.addEventListener( 'keydown', onKeyDown, false)
+        window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
+        window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
         window.addEventListener('keydown', fixPageScroll)        
     } else {
         controls.enabled = false
-        document.removeEventListener( 'keydown', onKeyDown, false)
+        window.removeEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
+        window.removeEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
         window.removeEventListener('keydown', fixPageScroll) 
     }
 } 
