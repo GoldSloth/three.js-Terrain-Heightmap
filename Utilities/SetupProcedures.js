@@ -31,7 +31,8 @@ function setupWorld() {
     waterMesh.rotateX(THREE.Math.degToRad(90))
     waterMesh.position.x -= worldSize/2
     waterMesh.position.z -= worldSize/2
-    waterMesh.position.y -= 240
+    waterMesh.position.y -= 280
+    
     scene.add(waterMesh)
     return terrain
 }
