@@ -8,7 +8,7 @@ var Key = {
     W: 87,
     A: 65,
     S: 83,
-    D: 63,
+    D: 68,
     SPACE: 32,
     SHIFT: 16,
     

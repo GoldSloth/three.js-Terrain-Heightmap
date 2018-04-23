@@ -23,7 +23,7 @@ function setupWorld() {
     
     var worldSize = Math.sqrt(objects.length)*15
     console.log(worldSize)
-    var waterPlane = new THREE.PlaneGeometry(worldSize, worldSize)
+    var waterPlane = new THREE.PlaneGeometry(1000, 1000)
     var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", transparent: true, opacity: 0.8})
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
     waterMesh.renderOrder = 1
