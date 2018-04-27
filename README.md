@@ -11,3 +11,5 @@
 * Completed partially. ~~Cleaning up of code for easier use.~~
 * The creation of a deformable mesh after terrain is loaded, which can be depressed/deformed by player footsteps
 ![Fancy terrain](https://preview.ibb.co/dVKJWx/Screen_Shot_2018_04_22_at_19_04_04.jpg)
+## Check it out live:
+**https://golddolphinskb-fexcraftian.github.io/three.js-Terrain-Heightmap/**
