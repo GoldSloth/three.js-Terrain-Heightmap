@@ -1,0 +1,31 @@
+terrainProfile2 = [{
+        "id": 0,
+        "name": "Water",
+        "level": 0.22,
+        "colour": "rgb(255, 65, 65)"
+    },
+    {
+        "id": 1,
+        "name": "Lush Grass",
+        "level": 0.3,
+        "colour": "rgb(255, 65, 156)"
+    },
+    {
+        "id": 2,
+        "name": "Dark Grass",
+        "level": 0.5,
+        "colour": "rgb(255, 65, 226)"
+    },
+    {
+        "id": 3,
+        "name": "Rock",
+        "level": 0.66,
+        "colour": "rgb(124, 47, 175)"
+    },
+    {
+        "id": 4,
+        "name": "Snow",
+        "level": 1,
+        "colour": "rgb(38, 32, 112)"
+    },
+]
