@@ -46,7 +46,7 @@ function Terrain(heightMap) {
         
         for (var x=0; x<this.heightMap.length-1; x++) {
             for (var y=0; y<this.heightMap[0].length-1; y++) {
-//                var bgeom = new THREE.BufferGeometry()
+                var bgeom = new THREE.BufferGeometry()
                 var geom = new THREE.Geometry()
                
                 geom.vertices[0] = (new THREE.Vector3(x, this.heightMap[x][y], y))
@@ -65,7 +65,9 @@ function Terrain(heightMap) {
 
                 geom.computeFaceNormals();
                 geom.computeVertexNormals();
-
+                
+                bgeom.fromGeometry(geom.clone())
+                
                 var meanVector = new THREE.Vector3(0, 0, 0)
                 for (var i=0; i < geom.vertices.length; i++) {
                     meanVector.add(geom.vertices[i])
@@ -82,14 +84,11 @@ function Terrain(heightMap) {
                 delete object
                 var material = new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color: color})
                 var object = new THREE.Mesh(geom, material);
-//                object.renderOrder = 0
+                object.renderOrder = 0
                 object.material.color = color
                 object.name = 'terrainmesh'
-                console.log(object)
                 scene.add(object)
-                console.log(scene.children.length)
             }
         }
-        console.log(scene)
     }
 }
