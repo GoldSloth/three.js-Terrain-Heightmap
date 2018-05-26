@@ -4,31 +4,28 @@
         <title id="Title">Three.JS Heightmap</title>
         <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
         <style> body {padding: 0; margin: 0;} </style>
+<!--    External libraries: Only use urls/cdn links-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/PointerLockControls.js"></script>
         <script src="https://www.marvinj.org/releases/marvinj-0.7.js"></script>
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+<!--    Assets-->
         <script type="text/javascript" src="terrain.json"></script>
+        <script type="text/javascript" src="vaporwaveTerrain.json"></script>
+<!--    Internal libraries-->
         <script src="./Utilities/CompatibilityTools.js"></script>
         <script src="./Utilities/PlayerMovement.js"></script>
         <script src="./Utilities/PointerLockUtilities.js"></script>
         <script src="./Utilities/SetupProcedures.js"></script>
         <script src="./Utilities/CollisionUtils.js"></script>
-    
         <script src="./Utilities/TerrainUtilities/Terrain.js"></script>
         <script src="./Utilities/TerrainUtilities/TerrainFromImage.js"></script>
         <script src="./Utilities/TerrainUtilities/TerrainFromMath.js"></script>
-        
-        <script src="LoadTerrain.js"></script>
+<!--    The "main" javascript file-->
         <script src="sketch.js"></script>
 
     </head>
     <body>
         <div id="render"></div>
-<!--            <img src='./Maps/Hereford Height Map (Merged).png' id='heightImage'>-->
-<!--            <img src='./Maps/customMap.png' id='heightImage'>-->
-<!--            <img src='./Maps/customMap2.png' id='heightImage'>-->
-<!--        <img src='./Maps/flat.png' id='heightImage'>-->
-<!--        <canvas id="heightMap" width="1000" height="1000"></canvas>-->
     </body>
 </html>
