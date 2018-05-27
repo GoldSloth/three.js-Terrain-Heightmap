@@ -30,12 +30,12 @@ function interpretImage() {
         console.log('Time for creating terrain: ' + (performance.now()-time))
         var time = performance.now()
     }
-    terrain.changeRes(50, 50)
+    terrain.changeRes(sizeX, sizeY)
     if (performanceTest) {
         console.log('Time for changing resoloution: ' + (performance.now()-time))
         var time = performance.now()
     }
-    terrain.changeMultiplier(0.75)
+    terrain.changeMultiplier(magnitudeY)
     if (performanceTest) {
         console.log('Time for creating multiplier: ' + (performance.now()-time))
         var time = performance.now()

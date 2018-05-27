@@ -2,6 +2,9 @@ function Terrain(heightMap) {
     this.originalHeightMap = heightMap
     this.heightMap = this.originalHeightMap
     
+    this.scaleX = 1
+    this.scaleY = 1
+    
     this.changeRes = function(newResX, newResY) {
         var changeX = (this.originalHeightMap.length/newResX)
         var changeY = (this.originalHeightMap[0].length/newResY)
@@ -13,8 +16,6 @@ function Terrain(heightMap) {
             }
             this.heightMap.push(temp)
         }
-        console.log(this.heightMap.length)
-        console.log(this.heightMap[0].length)
     }
     
     this.changeMultiplier = function(multiplier) {
@@ -28,7 +29,6 @@ function Terrain(heightMap) {
     
     this.draw = function() {
         console.log('Starting draw')
-        console.log(this.heightMap)
         this.maxValue = 0
         this.minValue = 0
         for (var x=0; x<this.heightMap.length; x++) {
@@ -42,53 +42,75 @@ function Terrain(heightMap) {
             } 
         }
         
+        var material = new THREE.MeshLambertMaterial({side: THREE.BackSide, vertexColors: THREE.FaceColors})
+        var geom = new THREE.Geometry()
         
+        var counter = 0
         
         for (var x=0; x<this.heightMap.length-1; x++) {
             for (var y=0; y<this.heightMap[0].length-1; y++) {
-                var bgeom = new THREE.BufferGeometry()
-                var geom = new THREE.Geometry()
-               
-                geom.vertices[0] = (new THREE.Vector3(x, this.heightMap[x][y], y))
-                geom.vertices[1] = (new THREE.Vector3(x+1, this.heightMap[x+1][y], y))
-                geom.vertices[2] = (new THREE.Vector3(x, this.heightMap[x][y+1], y+1))
-                geom.vertices[3] = (new THREE.Vector3(x+1, this.heightMap[x+1][y], y))
-                geom.vertices[4] = (new THREE.Vector3(x+1, this.heightMap[x+1][y+1], y+1))
-                geom.vertices[5] = (new THREE.Vector3(x, this.heightMap[x][y+1], y+1))
                 
-                for (var i=0; i<geom.vertices.length; i++) {
-                    geom.vertices[i].multiply(new THREE.Vector3(10, 1, 10))
+                var vertices = []
+                
+                vertices[0] = (new THREE.Vector3(x, this.heightMap[x][y], y))
+                vertices[1] = (new THREE.Vector3(x+1, this.heightMap[x+1][y], y))
+                vertices[2] = (new THREE.Vector3(x, this.heightMap[x][y+1], y+1))
+                vertices[3] = (new THREE.Vector3(x+1, this.heightMap[x+1][y], y))
+                vertices[4] = (new THREE.Vector3(x+1, this.heightMap[x+1][y+1], y+1))
+                vertices[5] = (new THREE.Vector3(x, this.heightMap[x][y+1], y+1))
+                
+                for (var i=0; i<vertices.length; i++) {
+                    vertices[i].multiply(new THREE.Vector3(scaleX, 1, scaleY))
                 }
                 
-                geom.faces.push(new THREE.Face3(0, 1, 2))
-                geom.faces.push(new THREE.Face3(3, 4, 5))
-
-                geom.computeFaceNormals();
-                geom.computeVertexNormals();
+                var mean1 = new THREE.Vector3(0,0,0)
+                var mean2 = new THREE.Vector3(0,0,0)
                 
-                bgeom.fromGeometry(geom.clone())
-                
-                var meanVector = new THREE.Vector3(0, 0, 0)
-                for (var i=0; i < geom.vertices.length; i++) {
-                    meanVector.add(geom.vertices[i])
+                for (var i=0; i<3; i++) {
+                    mean1.add(vertices[i])
                 }
-                meanVector.divideScalar(geom.vertices.length)
-                var meanHeight = meanVector.y/this.maxValue;
+                for (var i=3; i<6; i++) {
+                    mean2.add(vertices[i])
+                }
+                mean1.divideScalar(3)
+                mean2.divideScalar(3)
+                
+                for (var i=0; i<vertices.length; i++) {
+                    geom.vertices[i+counter] = vertices[i]
+                }
+                
+                var meanHeight1 = (mean1.y-this.minValue)/this.maxValue
+                var meanHeight2 = (mean2.y-this.minValue)/this.maxValue
+                             
                 for (var i=0; i<terrainProfile.length; i++){
-                    if (meanHeight < terrainProfile[i].level) {
-                        var color = new THREE.Color(terrainProfile[i].colour.toString())
+                    if (meanHeight1 < terrainProfile[i].level) {
+                        var color1 = new THREE.Color(terrainProfile[i].colour.toString())
                         break;
                     }
                 }
                 
-                delete object
-                var material = new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color: color})
-                var object = new THREE.Mesh(geom, material);
-                object.renderOrder = 0
-                object.material.color = color
-                object.name = 'terrainmesh'
-                scene.add(object)
+                for (var i=0; i<terrainProfile.length; i++){
+                    if (meanHeight2 < terrainProfile[i].level) {
+                        var color2 = new THREE.Color(terrainProfile[i].colour.toString())
+                        break;
+                    }
+                }
+                             
+                geom.faces.push(new THREE.Face3(0+counter, 1+counter, 2+counter))
+                geom.faces.push(new THREE.Face3(3+counter, 4+counter, 5+counter))
+                geom.faces[counter/3].color = color1.clone()
+                geom.faces[(counter/3)+1].color = color2.clone()
+                counter += 6
             }
         }
+        
+        geom.computeFaceNormals();
+        geom.computeVertexNormals();
+        geom.computeBoundingSphere()
+        geom.computeBoundingBox()
+
+        var object = new THREE.Mesh(geom, material);
+        object.name = 'terrainmesh'
+        scene.add(object)
     }
 }
