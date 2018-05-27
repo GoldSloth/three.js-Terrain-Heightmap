@@ -1,4 +1,4 @@
-var performanceTest = false
+var performanceTest = true
 
 var scene = new THREE.Scene();
 var width = 1000;
@@ -14,11 +14,11 @@ const gravity = 5
 
 // World parameters
 
-var sizeX = 100
-var sizeY = 100
+var sizeX = 400
+var sizeY = 400
 
-var scaleX = 2
-var scaleY = 2
+var scaleX = 1
+var scaleY = 1
 
 console.log("Total worldsize is " + (sizeX * scaleX) + "m by " + (sizeY * scaleY) + "m")
 
