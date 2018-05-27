@@ -26,7 +26,7 @@ var Key = {
 }
 
 function calculateMovement() {
-    const speed = 0.25
+    const speed = 0.08
     if (Key.isDown(Key.UP) || Key.isDown(Key.W)) {
         velocity.z -= 1.7 * speed
     }
@@ -41,7 +41,7 @@ function calculateMovement() {
     }
     
     if (Key.isDown(Key.SPACE)) {
-        velocity.y += 10 * speed
+        velocity.y += 20 * speed
     }
     
     if (Key.isDown(Key.SHIFT)) {
