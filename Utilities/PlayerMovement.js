@@ -26,7 +26,7 @@ var Key = {
 }
 
 function calculateMovement() {
-    const speed = 0.08
+    const speed = 0.1
     if (Key.isDown(Key.UP) || Key.isDown(Key.W)) {
         velocity.z -= 1.7 * speed
     }

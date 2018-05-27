@@ -20,7 +20,9 @@ var sizeY = 400
 var scaleX = 1
 var scaleY = 1
 
-console.log("Total worldsize is " + (sizeX * scaleX) + "m by " + (sizeY * scaleY) + "m")
+var worldSize = new THREE.Vector2(sizeX * scaleX, sizeY * scaleY)
+
+console.log("Total worldsize is " + worldSize.x + "m by " + worldSize.y + "m")
 
 var magnitudeY = 0.5
 
@@ -40,7 +42,6 @@ window.onload = function() {
 
 function main() {
     var playerLight = addLights()
-
     var terrain = new THREE.Object3D()
     
     for (var i=0; i<scene.children.length; i++) {
@@ -52,7 +53,18 @@ function main() {
     var playerHeight = 5.0;
 
     var collider = new Collider(controls.getObject().position, terrain, playerHeight)
-
+    
+    controls.getObject().position.x += worldSize.x/2
+    controls.getObject().position.z += worldSize.y/2
+    controls.getObject().position.y += 150*magnitudeY
+    
+    playerLight.position.x += worldSize.x/2
+    playerLight.position.z += worldSize.y/2
+    playerLight.position.y += 100
+    
+//    var pointLightHelper = new THREE.PointLightHelper(playerLight, 100);
+//    scene.add(pointLightHelper)
+    
     function updateScreen() {
         requestAnimationFrame(updateScreen)
         renderer.render(scene, camera)
@@ -66,8 +78,6 @@ function main() {
             controls.getObject().translateY(velocity.y);
             controls.getObject().translateZ(velocity.z);
             controls.getObject().translateY(collider.update(delta));
-
-            playerLight.position.copy(controls.getObject().position)
         }
         prevTime = time;
     renderer.render( scene, camera );

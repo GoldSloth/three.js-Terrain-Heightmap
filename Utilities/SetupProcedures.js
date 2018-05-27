@@ -5,22 +5,14 @@ function setupRender() {
 }
 
 function addLights() {
-    var amblight = new THREE.AmbientLight(0xffffff, 0.4)
-    var playerLight = new THREE.PointLight(0xffffff, 0.6)
+    var amblight = new THREE.AmbientLight(0xffffff, 0.2)
+    var playerLight = new THREE.PointLight(0xffffff, 0.9)
     scene.add(amblight)
     scene.add(playerLight)
     return playerLight
 }
 
 function setupWorld() {
-    // res, multiplier, scene, terrainProfile
-    var objects = loadTerrain(15, 2.5, terrainProfile)
-    
-    var terrain = new THREE.Object3D()
-    for (var i=0; i < objects.length; i++) {
-        terrain.add(objects[i].clone())
-    }
-    
     var worldSize = Math.sqrt(objects.length)*15
     console.log(worldSize)
     var waterPlane = new THREE.PlaneGeometry(1000, 1000)
