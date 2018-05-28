@@ -34,7 +34,6 @@ window.onload = function() {
     addPointerLockListeners()
     
     setupRender()
-    
     terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')
 //    terrainFromMath(128, 20, 20)
     

@@ -40,6 +40,7 @@ function interpretImage() {
         console.log('Time for creating multiplier: ' + (performance.now()-time))
         var time = performance.now()
     }
+    terrain.smoothingFilter(1)
     terrain.draw()
     if (performanceTest) {
         console.log('Time for drawing terrain: ' + (performance.now()-time))

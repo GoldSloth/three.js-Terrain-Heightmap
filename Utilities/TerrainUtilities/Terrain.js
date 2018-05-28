@@ -9,12 +9,35 @@ function Terrain(heightMap) {
         var changeX = (this.originalHeightMap.length/newResX)
         var changeY = (this.originalHeightMap[0].length/newResY)
         this.heightMap = []
-        for (var x=0; x<this.originalHeightMap.length; x+= changeX) {
+        for (var x=0; x<this.originalHeightMap.length-1; x+= changeX) {
             var temp = []
-            for (var y=0; y<this.originalHeightMap[0].length; y+= changeY) {
-                temp.push(this.originalHeightMap[Math.floor(x)][Math.floor(y)])
+            for (var y=0; y<this.originalHeightMap[0].length-13; y+= changeY) {
+                if (x%1 != 0 || y%1 != 0) {
+                    var total = 0
+                    total += this.originalHeightMap[Math.ceil(x)][Math.ceil(y)]
+                    total += this.originalHeightMap[Math.ceil(x)][Math.floor(y)]
+                    total += this.originalHeightMap[Math.floor(x)][Math.ceil(y)]
+                    total += this.originalHeightMap[Math.floor(x)][Math.floor(y)]
+                    temp.push(total/4)
+                } else {
+                    temp.push(this.originalHeightMap[x][y])
+                }
             }
             this.heightMap.push(temp)
+        }
+    }
+    
+    this.smoothingFilter = function(mix) {
+        for (var x=1; x<this.heightMap.length-1; x++) {
+            for (var y=1; y<this.heightMap[0].length-1; y++) {
+                var mean = this.heightMap[x][y]
+                mean += this.heightMap[x+1][y]
+                mean += this.heightMap[x-1][y]
+                mean += this.heightMap[x][y+1]
+                mean += this.heightMap[x][y-1]
+                mean /= 5
+                this.heightMap[x][y] = (mean*mix) + (this.heightMap[x][y]*(1-mix))
+            }
         }
     }
     
