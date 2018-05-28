@@ -52,7 +52,7 @@ function main() {
     var playerHeight = 5.0;
     controls.getObject().position.y += 150*magnitudeY
     var collider = new Collider(controls.getObject().position, terrain, playerHeight)
-    
+    createWater()
     playerLight.position.y = 150
     
 //    var lightHelper = new THREE.DirectionalLightHelper(playerLight, 100);

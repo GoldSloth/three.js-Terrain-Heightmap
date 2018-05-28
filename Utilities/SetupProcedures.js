@@ -13,19 +13,12 @@ function addLights() {
     return playerLight
 }
 
-function setupWorld() {
-    var worldSize = Math.sqrt(objects.length)*15
-    console.log(worldSize)
-    var waterPlane = new THREE.PlaneGeometry(1000, 1000)
-    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", transparent: true, opacity: 0.8})
+function createWater() {
+    var waterPlane = new THREE.PlaneGeometry(worldSize.x, worldSize.y)
+    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", transparent: true, opacity: 0.5})
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
-    waterMesh.renderOrder = 1
     waterMesh.material.side = THREE.DoubleSide;
     waterMesh.rotateX(THREE.Math.degToRad(90))
-    waterMesh.position.x -= worldSize/2
-    waterMesh.position.z -= worldSize/2
-    waterMesh.position.y -= 240
-    
+    waterMesh.position.y += 15
     scene.add(waterMesh)
-    return terrain
 }
