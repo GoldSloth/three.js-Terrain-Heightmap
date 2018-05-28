@@ -131,8 +131,12 @@ function Terrain(heightMap) {
         geom.computeVertexNormals();
         geom.computeBoundingSphere()
         geom.computeBoundingBox()
-
+        
         var object = new THREE.Mesh(geom, material);
+        object.position.x -= worldSize.x/2
+        object.position.z -= worldSize.y/2
+        object.updateMatrix()
+        object.updateMatrixWorld()
         object.name = 'terrainmesh'
         scene.add(object)
     }

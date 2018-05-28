@@ -6,9 +6,10 @@ function setupRender() {
 
 function addLights() {
     var amblight = new THREE.AmbientLight(0xffffff, 0.2)
-    var playerLight = new THREE.PointLight(0xffffff, 0.9)
-    scene.add(amblight)
+    var playerLight = new THREE.DirectionalLight(0xffffff, 0.9)
     scene.add(playerLight)
+    scene.add(amblight)
+    
     return playerLight
 }
 

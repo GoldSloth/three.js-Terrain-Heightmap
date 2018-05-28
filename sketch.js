@@ -50,19 +50,13 @@ function main() {
     }
     console.log(scene)
     var playerHeight = 5.0;
-
+    controls.getObject().position.y += 150*magnitudeY
     var collider = new Collider(controls.getObject().position, terrain, playerHeight)
     
-    controls.getObject().position.x += worldSize.x/2
-    controls.getObject().position.z += worldSize.y/2
-    controls.getObject().position.y += 150*magnitudeY
+    playerLight.position.y = 150
     
-    playerLight.position.x += worldSize.x/2
-    playerLight.position.z += worldSize.y/2
-    playerLight.position.y += 100
-    
-//    var pointLightHelper = new THREE.PointLightHelper(playerLight, 100);
-//    scene.add(pointLightHelper)
+//    var lightHelper = new THREE.DirectionalLightHelper(playerLight, 100);
+//    scene.add(lightHelper)
     
     function updateScreen() {
         requestAnimationFrame(updateScreen)
@@ -70,7 +64,6 @@ function main() {
         var time = performance.now()
         var delta = (time - prevTime)/100;
         if (controls.enabled) {
-
             velocity.multiplyScalar(delta)
             calculateMovement()
             controls.getObject().translateX(velocity.x);
