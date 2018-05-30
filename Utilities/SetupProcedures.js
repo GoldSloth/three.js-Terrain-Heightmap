@@ -14,8 +14,9 @@ function addLights() {
 }
 
 function createWater() {
+    var waterTexture = new THREE.TextureLoader().load("./Textures/water.jpg");
     var waterPlane = new THREE.PlaneGeometry(worldSize.x, worldSize.y)
-    var waterMaterial = new THREE.MeshPhongMaterial({color: "rgb(80, 146, 252)", transparent: true, opacity: 0.5})
+    var waterMaterial = new THREE.MeshPhongMaterial({map: waterTexture, transparent: true, opacity: 0.5})
     var waterMesh = new THREE.Mesh(waterPlane, waterMaterial)
     waterMesh.material.side = THREE.DoubleSide;
     waterMesh.rotateX(THREE.Math.degToRad(90))
