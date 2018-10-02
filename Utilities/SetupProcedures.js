@@ -7,8 +7,12 @@ function setupRender() {
 function addLights() {
     var amblight = new THREE.AmbientLight(0xffffff, 0.2)
     var playerLight = new THREE.DirectionalLight(0xffffff, 0.9)
+    playerLight.position.x += worldSize.x/2
+    playerLight.position.y += worldSize.y/2
+//    playerLight.castShadow = true;
+
     scene.add(playerLight)
-    scene.add(amblight)
+//    scene.add(amblight)
     
     return playerLight
 }

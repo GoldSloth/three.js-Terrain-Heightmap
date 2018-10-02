@@ -1,1 +1,6 @@
 _config.yml
+package.json
+package-lock.json
+typings
+typings.json
+node_modules/

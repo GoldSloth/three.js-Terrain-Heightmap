@@ -8,6 +8,7 @@ var controls = new THREE.PointerLockControls(camera);
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 var renderer = new THREE.WebGLRenderer();
+
 scene.add(controls.getObject())
 controls.enabled = false
 const gravity = 5
@@ -34,8 +35,8 @@ window.onload = function() {
     addPointerLockListeners()
     
     setupRender()
-    terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')
-//    terrainFromMath(128, 20, 20)
+//    terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')
+    terrainFromMath(128, sizeX, sizeY, 128, 128)
     
 }
 

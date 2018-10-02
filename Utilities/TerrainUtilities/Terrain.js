@@ -50,8 +50,7 @@ function Terrain(heightMap) {
         console.log('Res changed')
     }
     
-    this.draw = function() {
-        console.log('Starting draw')
+    this.calculateMinMax = function() {
         this.maxValue = 0
         this.minValue = 0
         for (var x=0; x<this.heightMap.length; x++) {
@@ -64,7 +63,31 @@ function Terrain(heightMap) {
                 }
             } 
         }
-        
+    }
+    
+    this.normalize = function() {
+        this.calculateMinMax()
+        for (var x=0; x<this.heightMap.length; x++) {
+            for (var y=0; y<this.heightMap[0].length; y++) {
+                this.heightMap[x][y] -= this.minValue
+            }
+        }
+    }
+    
+    this.applyPerlinNoise = function(mixture, divisionsX, divisionsY) {
+        var perlin = new SimplexNoise('seed')
+        var nRange = mixture * (this.maxValue - this.minValue)
+        var perlinMap = []
+        for (var x=0; x<this.heightMap.length; x++) {
+            for (var y=0; y<this.heightMap[0].length; y++) {
+                this.heightMap[x][y] += ((perlin.noise2D(x/divisionsX,y/divisionsY)+1)/2)*nRange
+            }
+        }
+    }
+    
+    this.draw = function() {
+        this.calculateMinMax()
+        console.log('Starting draw')
         var material = new THREE.MeshLambertMaterial({side: THREE.BackSide, vertexColors: THREE.FaceColors})
         var geom = new THREE.Geometry()
         
@@ -138,6 +161,74 @@ function Terrain(heightMap) {
         object.updateMatrix()
         object.updateMatrixWorld()
         object.name = 'terrainmesh'
+        scene.add(object)
+    }
+    
+    this.drawBuffer = function() {
+        this.calculateMinMax()
+        console.log('Starting draw')
+        
+        var material = new THREE.MeshLambertMaterial({side: THREE.BackSide, vertexColors: THREE.VertexColors})
+        var geom = new THREE.BufferGeometry()
+        
+        var counter = 0
+        
+        var bufferVertices = new Float32Array(2*3*3*(this.heightMap.length-1)*(this.heightMap[0].length-1))
+        
+        for (var x=0; x<this.heightMap.length-1; x++) {
+            for (var y=0; y<this.heightMap[0].length-1; y++) {
+                
+                bufferVertices[counter+0] = x*scaleX
+                bufferVertices[counter+1] = this.heightMap[x][y]
+                bufferVertices[counter+2] = y*scaleY
+                
+                bufferVertices[counter+3] = (x+1)*scaleX
+                bufferVertices[counter+4] = this.heightMap[x+1][y]
+                bufferVertices[counter+5] = y*scaleY
+                
+                bufferVertices[counter+6] = x*scaleX
+                bufferVertices[counter+7] = this.heightMap[x][y+1]
+                bufferVertices[counter+8] = (y+1)*scaleY
+                
+                bufferVertices[counter+9] = (x+1)*scaleX
+                bufferVertices[counter+10] = this.heightMap[x+1][y]
+                bufferVertices[counter+11] = y*scaleY
+                bufferVertices[counter+12] = (x+1)*scaleX
+                bufferVertices[counter+13] = this.heightMap[x+1][y+1]
+                bufferVertices[counter+14] = (y+1)*scaleY
+                bufferVertices[counter+15] = x*scaleX
+                bufferVertices[counter+16] = this.heightMap[x][y+1]
+                bufferVertices[counter+17] = (y+1)*scaleY
+
+                counter += 6*3
+            }
+        }
+        
+        geom.addAttribute('position', new THREE.BufferAttribute(bufferVertices, 3, true))
+        
+        var colors = new Uint8Array(geom.getAttribute('position').array.length)
+        var verts = geom.getAttribute('position').array
+        for (var i=0; i<verts.length; i+=3) {
+            var height = verts[i+1]/(this.maxValue-this.minValue)
+            colors[i] = 256*height
+            colors[i+1] = 256*height
+            colors[i+2] = 256*height
+        }
+          
+        geom.addAttribute('color', new THREE.BufferAttribute(colors, 3, true))
+        geom.computeVertexNormals();
+        geom.computeBoundingSphere()
+        geom.computeBoundingBox()
+        geom.normalizeNormals()
+        
+        var object = new THREE.Mesh(geom, material);
+        object.position.x -= worldSize.x/2
+        object.position.z -= worldSize.y/2
+        object.updateMatrix()
+        object.updateMatrixWorld()
+        object.name = 'terrainmesh'
+        object.castShadow = true
+        object.recieveShadow = true
         scene.add(object)
     }
 }

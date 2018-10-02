@@ -41,7 +41,9 @@ function interpretImage() {
         var time = performance.now()
     }
     terrain.smoothingFilter(0.5)
+    terrain.normalize()
     terrain.draw()
+//    terrain.drawBuffer()
     if (performanceTest) {
         console.log('Time for drawing terrain: ' + (performance.now()-time))
         var time = performance.now()
