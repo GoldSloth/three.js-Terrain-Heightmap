@@ -1,16 +1,16 @@
 var performanceTest = true
 
+var pointerLockElement = document.body
+
 var scene = new THREE.Scene();
 var width = 1000;
 var height = 700;
 var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 10000);
-var controls = new THREE.PointerLockControls(camera);
+var controls
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 var renderer = new THREE.WebGLRenderer();
 
-scene.add(controls.getObject())
-controls.enabled = false
 const gravity = 5
 
 // World parameters
@@ -32,7 +32,7 @@ window.onload = function() {
         console.log("Sorry, this browser is not compatible.")
         return
     }
-    addPointerLockListeners()
+    setupPointerLock()
     
     setupRender()
 //    terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')

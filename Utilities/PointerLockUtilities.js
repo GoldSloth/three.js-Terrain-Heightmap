@@ -1,46 +1,74 @@
-function pointerLockChange() {
-    if (document.pointerLockElement === document.body || document.mozPointerLockElement === document.body || document.webkitPointerLockElement === document.body) {
-        controls.enabled = true
+// function enableControls() {
+//     controls.lock()
+//     // controls.enabled = true
+    
+// }
+// function disableControls() {
+//     controls.unlock()
+//     // controls.enabled = false
+
+// } 
+
+// function addPointerLock() {
+//     var renderBox = document.getElementById("render")
+//     render.addEventListener('click', function (event) {
+//         if (controls.enabled) {
+//             disableControls()
+//         } else {
+//             enableControls()
+//         }
+//     }, false)
+// }
+
+// function fixPageScroll(event) {
+//     if(event.keyCode == 32 && event.target == document.body) {
+//         event.preventDefault();
+//     }
+// }
+
+function pointerLockChange(event) {
+    if ( document.pointerLockElement === pointerLockElement ||
+        document.mozPointerLockElement === pointerLockElement ||
+        document.webkitPointerLockElement === pointerLockElement 
+        ) {
+        controls.enabled = true;
         window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
         window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
-        window.addEventListener('keydown', fixPageScroll)        
+        window.addEventListener('keydown', fixPageScroll)    
     } else {
-        controls.enabled = false
+        controls.enabled = false;
         window.removeEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
         window.removeEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
         window.removeEventListener('keydown', fixPageScroll) 
     }
-} 
-
-function addPointerLockListeners() {
-    document.addEventListener( 'pointerlockchange', pointerLockChange, false )
-    document.addEventListener( 'mozpointerlockchange', pointerLockChange, false )
-    document.addEventListener( 'webkitpointerlockchange', pointerLockChange, false )
-    
-    document.getElementById('render').addEventListener( 'click', function ( event ) {
-        // Ask the browser to lock the pointer
-        document.body.requestPointerLock = document.body.requestPointerLock || document.body.mozRequestPointerLock || document.body.webkitRequestPointerLock
-        if ( /Firefox/i.test( navigator.userAgent ) ) {
-            var fullscreenchange = function ( event ) {
-                if ( document.fullscreenElement === document.body || document.mozFullscreenElement === document.body || document.mozFullScreenElement === document.body ) {
-                    document.removeEventListener( 'fullscreenchange', fullscreenchange )
-                    document.removeEventListener( 'mozfullscreenchange', fullscreenchange )
-                    document.body.requestPointerLock()
-                }
-            }
-            document.addEventListener( 'fullscreenchange', fullscreenchange, false )
-            document.addEventListener( 'mozfullscreenchange', fullscreenchange, false )
-            document.body.requestFullscreen = document.body.requestFullscreen || document.body.mozRequestFullscreen || document.body.mozRequestFullScreen || document.body.webkitRequestFullscreen
-            document.body.requestFullscreen()
-        } else {
-            document.body.requestPointerLock()
-        }
-    }, false )
 }
 
-function fixPageScroll(event) {
-    if(event.keyCode == 32 && event.target == document.body) {
-        event.preventDefault();
-    }
+function setupPointerLock() {
+    pointerLockElement = document.body
+    document.addEventListener('pointerlockchange', pointerLockChange, false);
+    document.addEventListener('mozpointerlockchange', pointerLockChange, false);
+    document.addEventListener('webkitpointerlockchange', pointerLockChange, false);
+
+    document.addEventListener('click', function (event) {
+        pointerLockElement.requestPointerLock = pointerLockElement.requestPointerLock || pointerLockElement.mozRequestPointerLock || pointerLockElement.webkitRequestPointerLock;
+        if ( /Firefox/i.test( navigator.userAgent ) ) {
+            var fullscreenchange = function ( event ) {
+                if ( document.fullscreenElement === pointerLockElement || document.mozFullscreenElement === pointerLockElement || document.mozFullScreenElement === pointerLockElement ) {
+                    document.removeEventListener( 'fullscreenchange', fullscreenchange );
+                    document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+                    pointerLockElement.requestPointerLock();
+                }
+            };
+            document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+            document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
+            pointerLockElement.requestFullscreen = pointerLockElement.requestFullscreen || pointerLockElement.mozRequestFullscreen || pointerLockElement.mozRequestFullScreen || pointerLockElement.webkitRequestFullscreen;
+            pointerLockElement.requestFullscreen();
+        } else {
+            pointerLockElement.requestPointerLock();
+        }
+    }, false)
+    controls = new THREE.PointerLockControls(camera, pointerLockElement);
+
+    scene.add(controls.getObject())
 }
 

@@ -9,10 +9,8 @@ function addLights() {
     var playerLight = new THREE.DirectionalLight(0xffffff, 0.9)
     playerLight.position.x += worldSize.x/2
     playerLight.position.y += worldSize.y/2
-//    playerLight.castShadow = true;
 
     scene.add(playerLight)
-//    scene.add(amblight)
     
     return playerLight
 }
