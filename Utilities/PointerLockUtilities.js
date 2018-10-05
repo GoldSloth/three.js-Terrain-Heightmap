@@ -1,31 +1,3 @@
-// function enableControls() {
-//     controls.lock()
-//     // controls.enabled = true
-    
-// }
-// function disableControls() {
-//     controls.unlock()
-//     // controls.enabled = false
-
-// } 
-
-// function addPointerLock() {
-//     var renderBox = document.getElementById("render")
-//     render.addEventListener('click', function (event) {
-//         if (controls.enabled) {
-//             disableControls()
-//         } else {
-//             enableControls()
-//         }
-//     }, false)
-// }
-
-// function fixPageScroll(event) {
-//     if(event.keyCode == 32 && event.target == document.body) {
-//         event.preventDefault();
-//     }
-// }
-
 function pointerLockChange(event) {
     if ( document.pointerLockElement === pointerLockElement ||
         document.mozPointerLockElement === pointerLockElement ||
@@ -72,3 +44,8 @@ function setupPointerLock() {
     scene.add(controls.getObject())
 }
 
+function fixPageScroll(event) {
+    if(event.keyCode == 32 && event.target == document.body) {
+        event.preventDefault();
+    }
+}
