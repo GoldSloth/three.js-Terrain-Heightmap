@@ -75,7 +75,7 @@ function Terrain(heightMap) {
     }
     
     this.applyPerlinNoise = function(mixture, divisionsX, divisionsY) {
-        var perlin = new SimplexNoise('seed')
+        var perlin = new SimplexNoise(Math.random())
         var nRange = mixture * (this.maxValue - this.minValue)
         var perlinMap = []
         for (var x=0; x<this.heightMap.length; x++) {
@@ -88,7 +88,7 @@ function Terrain(heightMap) {
     this.draw = function() {
         this.calculateMinMax()
         console.log('Starting draw')
-        var material = new THREE.MeshLambertMaterial({side: THREE.BackSide, vertexColors: THREE.FaceColors})
+        var material = new THREE.MeshLambertMaterial({side: THREE.BackSide, vertexColors: THREE.VertexColors, dithering: true})
         var geom = new THREE.Geometry()
         
         var counter = 0
@@ -149,11 +149,12 @@ function Terrain(heightMap) {
                 counter += 6
             }
         }
-        
-        geom.computeFaceNormals();
-        geom.computeVertexNormals();
-        geom.computeBoundingSphere()
         geom.computeBoundingBox()
+        geom.computeBoundingSphere()
+
+        geom.computeFaceNormals();
+        // geom.computeMorphNormals();
+
         
         var object = new THREE.Mesh(geom, material);
         object.position.x -= worldSize.x/2
