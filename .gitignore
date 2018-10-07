@@ -4,3 +4,4 @@ package-lock.json
 typings
 typings.json
 node_modules/
+jsconfig.json
