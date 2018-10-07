@@ -1,5 +1,5 @@
 function setupRender() {
-    renderer.setSize(width, height);
+    renderer.setSize(window.innerWidth*0.95, window.innerHeight*0.95);
     renderer.setPixelRatio(window.devicePixelRatio);
     document.getElementById("render").appendChild(renderer.domElement);
 }
@@ -7,12 +7,13 @@ function setupRender() {
 function addLights() {
     var amblight = new THREE.AmbientLight(0xffffff, 0.2)
     var playerLight = new THREE.DirectionalLight(0xffffff, 0.9)
-    playerLight.position.x += worldSize.x/2
-    playerLight.position.y += worldSize.y/2
+    playerLight.position.x = worldSize / 2
+    playerLight.position.y += 1.2 * magnitudeY
+    playerLight.position.z = worldSize / 2
 
     scene.add(playerLight)
+    scene.add(amblight)
     
-    return playerLight
 }
 
 function createWater() {
