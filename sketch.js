@@ -17,7 +17,7 @@ const gravity = 5
 
 // World parameters
 
-var worldSize = 600
+var worldSize = 200
 var magnitudeY = 50
 
 console.log("Total worldsize is " + worldSize.x + "m by " + worldSize.y + "m")
@@ -39,15 +39,16 @@ if (!isBrowserCompatible()) {
 
     setupRender()
     //    terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')
-    var perlinTerrain = new Terrain(worldSize, 100, "perlin", magnitudeY, Math.random(), 200)
-    perlinTerrain.setColours(terrainProfile)
+    var perlinTerrain = new Terrain(worldSize, 100, "perlin", magnitudeY, Math.random(), 100)
+    perlinTerrain.enlistColourProfile()
+    perlinTerrain._makeChart()
     var TerrainMesh = perlinTerrain.drawBufferGeometry()
     scene.add(TerrainMesh)
 
     addLights()
 
     var playerHeight = 5.0;
-    controls.getObject().position.y = 0
+    controls.getObject().position.y += magnitudeY
     collider = new Collider(controls.getObject().position, TerrainMesh, playerHeight)
     createWater()
 
