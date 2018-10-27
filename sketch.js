@@ -39,7 +39,9 @@ if (!isBrowserCompatible()) {
 
     setupRender()
     //    terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')
-    var perlinTerrain = new Terrain(worldSize, 100, "perlin", magnitudeY, Math.random(), 100)
+    var seed = Math.random()
+    console.log(seed*1000)
+    var perlinTerrain = new Terrain(worldSize, 100, "perlin", magnitudeY, seed, 100)
     perlinTerrain.enlistColourProfile()
     perlinTerrain._makeChart()
     var TerrainMesh = perlinTerrain.drawBufferGeometry()

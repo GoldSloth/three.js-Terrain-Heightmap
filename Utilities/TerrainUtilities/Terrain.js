@@ -33,11 +33,12 @@ class Terrain {
         var halfSize = this.size/2
         var segmentSize = this.size/this.segments
 
+        var offsetFromOrig = Math.random() * 1000
         for (var i = 0; i <= this.segments; i++) {
             var z = (i * segmentSize) - halfSize
             for (var j = 0; j <= this.segments; j++) {
                 var x = (j * segmentSize) - halfSize
-                var rawPerlin = (perlin1.noise2D(x / perlinModifier, z / perlinModifier) + 1) / 2
+                var rawPerlin = (perlin1.noise2D((x + offsetFromOrig) / perlinModifier, (z + offsetFromOrig) / perlinModifier) + 1) / 2
 
                 this.normalisedPerl.push(rawPerlin)
 
@@ -56,7 +57,7 @@ class Terrain {
         document.body.appendChild(chartCanvas)
 
         var chartElement = document.getElementById("chartCanvas").getContext("2d")
-        const subDivisions = 10
+        const subDivisions = 20
         // 1 % increment must equal 0.
         const increment = 1/subDivisions
         var chartDataE = []
@@ -159,16 +160,35 @@ class Terrain {
         this.VertShader = new VertexShader()
         this.FragShader = new FragmentShader(this.terrainColours)
 
+        var size = this.segments * this.segments
+
+        var noiseTexture = new Uint8Array(size)
+        // var imgNoise = new SimplexNoise(Math.random())
+        // for (var x=0; x <= this.segments; x++) {
+        //     for (var y=0; y <= this.segments; y++) {
+        //         var ns = ((imgNoise.noise2D(x/10, y/10)+ 1) / 2) * 255
+        //         noiseTexture[x + (this.segments * y)] = ns
+        //     }
+        // }
+
+        for (var i=0; i < size; i++) {
+            noiseTexture[i] = Math.random() * 255
+        }
+        var texture = new THREE.DataTexture(noiseTexture, this.segments, this.segments, THREE.LuminanceFormat, THREE.UnsignedByteType, THREE.UVMapping)
+        texture.needsUpdate = true
+
+        console.log(texture)
         this.material = new THREE.ShaderMaterial({
             uniforms: THREE.UniformsUtils.merge([
                 THREE.UniformsLib['lights'],
                 {
-                    'lightIntensity': {type: 'f', value: 1.0},
                     'terrainColors': {value: this.terrainColours, type: 'v4v'},
-                    'magnitudeY': {type: 'f', value: this.yAmplitude}
+                    'magnitudeY': {type: 'f', value: this.yAmplitude},
+                    'heightVariation': {type: 'f', value: 0.1},
+                    'uTex': {type: 't', value: texture,
+                    'segments': {type: 'vec2', value: this.segments}}
                 }
             ]),
-            transparent: true,
             lights: true,
             vertexShader: this.VertShader.getText(),
             fragmentShader: this.FragShader.getText()
