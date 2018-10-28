@@ -22,15 +22,6 @@ var magnitudeY = 50
 
 console.log("Total worldsize is " + worldSize.x + "m by " + worldSize.y + "m")
 
-    
-    
-    // for (var i=0; i<scene.children.length; i++) {
-    //     if (scene.children[i].name == "terrainmesh") {
-    //         terrain.add(scene.children[i].clone())
-    //     }
-    // }
-    // console.log(scene)    
-
 if (!isBrowserCompatible()) {
     console.log("Sorry, this browser is not compatible.")
 } else {
@@ -38,10 +29,9 @@ if (!isBrowserCompatible()) {
     setupPointerLock()
 
     setupRender()
-    //    terrainFromImage('https://image.ibb.co/gSnq0o/custom_Map.png')
     var seed = Math.random()
     console.log(seed*1000)
-    var perlinTerrain = new Terrain(worldSize, 100, "perlin", magnitudeY, seed, 100)
+    var perlinTerrain = new Terrain(worldSize, 128, "perlin", magnitudeY, seed, 100)
     perlinTerrain.enlistColourProfile()
     perlinTerrain._makeChart()
     var TerrainMesh = perlinTerrain.drawBufferGeometry()

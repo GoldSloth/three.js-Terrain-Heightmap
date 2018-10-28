@@ -29,11 +29,12 @@ class Terrain {
         this.indices = []
         this.vertices = []
         this.normals = []
+        this.uv = []
 
         var halfSize = this.size/2
         var segmentSize = this.size/this.segments
 
-        var offsetFromOrig = Math.random() * 1000
+        var offsetFromOrig = Math.random()
         for (var i = 0; i <= this.segments; i++) {
             var z = (i * segmentSize) - halfSize
             for (var j = 0; j <= this.segments; j++) {
@@ -44,7 +45,7 @@ class Terrain {
 
                 var y = rawPerlin  * magnitudeY
                 this.vertices.push(x, y, z)
-
+                this.uv.push(((x / this.segments) + 1) * 0.5, ((z / this.segments) + 1) * 0.5)
                 this.normals.push(0 , 1, 0)
             }
         }
@@ -66,7 +67,6 @@ class Terrain {
             chartDataE.push(0)
             labels.push(i*increment)
         }
-        console.log(chartData)
         for (var i=0; i < this.normalisedPerl.length; i++) {
             for (var j=0; j < subDivisions; j++) {
                 if (this.normalisedPerl[i] > j * increment && this.normalisedPerl[i] < (j + 1) * increment) {
@@ -90,7 +90,6 @@ class Terrain {
             }]
         }
 
-        console.log(chartData)
         var distributionChart = new Chart(chartElement, {
             type: 'line',
             data: chartData,
@@ -149,8 +148,10 @@ class Terrain {
         this.geometry = new THREE.BufferGeometry()
 
         this.geometry.setIndex(this.indices);
-        this.geometry.addAttribute('position', new THREE.Float32BufferAttribute(this.vertices, 3));
-        this.geometry.addAttribute('normal', new THREE.Float32BufferAttribute(this.normals, 3));
+        this.geometry.addAttribute('position', new THREE.Float32BufferAttribute(this.vertices, 3))
+        this.geometry.addAttribute('normal', new THREE.Float32BufferAttribute(this.normals, 3))
+        this.geometry.addAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2))
+
 
         this.geometry.computeVertexNormals()
         this.geometry.computeFaceNormals()
@@ -160,24 +161,14 @@ class Terrain {
         this.VertShader = new VertexShader()
         this.FragShader = new FragmentShader(this.terrainColours)
 
-        var size = this.segments * this.segments
+        var heightTextureSize = new THREE.Vector2(2048, 2048)
 
-        var noiseTexture = new Uint8Array(size)
-        // var imgNoise = new SimplexNoise(Math.random())
-        // for (var x=0; x <= this.segments; x++) {
-        //     for (var y=0; y <= this.segments; y++) {
-        //         var ns = ((imgNoise.noise2D(x/10, y/10)+ 1) / 2) * 255
-        //         noiseTexture[x + (this.segments * y)] = ns
-        //     }
-        // }
+        var heightTexture = new RGBUInt8PerlinTexture(heightTextureSize)
+        heightTexture.makeFirstLayer(200, 0.75)
+        heightTexture.makeNewLayer(50, 0.25)
 
-        for (var i=0; i < size; i++) {
-            noiseTexture[i] = Math.random() * 255
-        }
-        var texture = new THREE.DataTexture(noiseTexture, this.segments, this.segments, THREE.LuminanceFormat, THREE.UnsignedByteType, THREE.UVMapping)
-        texture.needsUpdate = true
+        var rawHeightTexture = heightTexture.image
 
-        console.log(texture)
         this.material = new THREE.ShaderMaterial({
             uniforms: THREE.UniformsUtils.merge([
                 THREE.UniformsLib['lights'],
@@ -185,8 +176,7 @@ class Terrain {
                     'terrainColors': {value: this.terrainColours, type: 'v4v'},
                     'magnitudeY': {type: 'f', value: this.yAmplitude},
                     'heightVariation': {type: 'f', value: 0.1},
-                    'uTex': {type: 't', value: texture,
-                    'segments': {type: 'vec2', value: this.segments}}
+                    'uTex': {value: null}
                 }
             ]),
             lights: true,
@@ -194,6 +184,11 @@ class Terrain {
             fragmentShader: this.FragShader.getText()
  
         })
+
+        this.material.uniforms.uTex.value = rawHeightTexture
+        // this.material.uniforms.uTex.value.magFilter = THREE.NearestFilter
+        // this.material.uniforms.uTex.value.minFilter = THREE.NearestFilter
+        this.material.uniforms.uTex.value.needsUpdate = true
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         console.log(this.mesh)
         return this.mesh
