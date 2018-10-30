@@ -119,18 +119,22 @@ class Terrain {
 
     enlistColourProfile() {
         this.terrainColours = []
+        
         // Sand
         this.terrainColours.push(new THREE.Vector4(0.0, 0.9, 0.9, 0.7))
         // Grass
-        this.terrainColours.push(new THREE.Vector4(0.1, 0.3, 0.7, 0.2))
+        this.terrainColours.push(new THREE.Vector4(0.2, 0.3, 0.7, 0.2))
         // Dark Grass
         this.terrainColours.push(new THREE.Vector4(0.4, 0.2, 0.4, 0.15))
         // Light Rock
-        this.terrainColours.push(new THREE.Vector4(0.7, 0.5, 1.5, 0.5))
+        this.terrainColours.push(new THREE.Vector4(0.7, 0.4, 0.4, 0.4))
         // Dark Rock
-        this.terrainColours.push(new THREE.Vector4(0.8, 0.5, 1.5, 0.5))
-        // Snow
-        this.terrainColours.push(new THREE.Vector4(1.0, 1.0, 1.0, 1.0))
+        this.terrainColours.push(new THREE.Vector4(0.8, 0.2, 0.2, 0.2))
+
+        // this.terrainColours.push(new THREE.Vector4(0.0, 0.0, 0.0, 0.0))
+        // this.terrainColours.push(new THREE.Vector4(0.25, 0.25, 0.25, 0.25))
+        // this.terrainColours.push(new THREE.Vector4(0.5, 0.5, 0.5, 0.5))
+        // this.terrainColours.push(new THREE.Vector4(0.75, 0.75, 0.75, 0.75))
     }
 
     drawBufferGeometry() {
@@ -161,7 +165,7 @@ class Terrain {
         this.VertShader = new VertexShader()
         this.FragShader = new FragmentShader(this.terrainColours)
 
-        var heightTextureSize = new THREE.Vector2(2048, 2048)
+        var heightTextureSize = new THREE.Vector2(1024, 1024)
 
         var heightTexture = new RGBUInt8PerlinTexture(heightTextureSize)
         heightTexture.makeFirstLayer(200, 0.75)
@@ -175,8 +179,10 @@ class Terrain {
                 {
                     'terrainColors': {value: this.terrainColours, type: 'v4v'},
                     'magnitudeY': {type: 'f', value: this.yAmplitude},
-                    'heightVariation': {type: 'f', value: 0.1},
-                    'uTex': {value: null}
+                    'heightVariation': {type: 'f', value: 0.05},
+                    'uTex': {value: null},
+                    'ambientLightIntensity': {type: 'f', value: 0.15},
+                    'blendRatio': {type: "t", value: 0.04}
                 }
             ]),
             lights: true,

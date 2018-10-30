@@ -11,6 +11,8 @@ varying vec2 vUv;
 uniform float magnitudeY;
 uniform vec4 terrainColors[TERRAIN_COLOR_ARRAY_LENGTH];
 uniform float heightVariation;
+uniform float ambientLightIntensity;
+uniform float blendRatio;
 
 uniform sampler2D uTex;
 
@@ -26,6 +28,7 @@ uniform sampler2D uTex;
     uniform DirectionalLight directionalLights[NUM_DIR_LIGHTS];
 #endif
 
+
 void main()
 {
     vec4 addedLights = vec4(0.0, 0.0, 0.0, 1.0);
@@ -35,13 +38,45 @@ void main()
             addedLights.rgb += (clamp(dot(lightDirection, -vNormal), 0.0, 0.9) + 0.1) * directionalLights[l0].color;
         }
     }
+    addedLights = (addedLights * (1.0 - ambientLightIntensity) + ambientLightIntensity);
+
+    float textureHeight = texture2D(uTex, vUv).r;
+    float virtualHeight = vPosition.y/magnitudeY + (textureHeight * heightVariation);
+
+    vec3 blendedColor;
+    
+    vec3 hColor;
+    vec3 lColor;
+    float hH;
+    float lH;
+
+    float h;
 
     for (int l1 = 0; l1 < TERRAIN_COLOR_ARRAY_LENGTH; l1 ++) {
-        float textureColour = texture2D(uTex, vUv).r - 0.5;
-        if (terrainColors[l1].x < (vPosition.y/magnitudeY + (textureColour * heightVariation))) {
-            gl_FragColor = vec4(terrainColors[l1].y, terrainColors[l1].z, terrainColors[l1].w, 1.0) * addedLights;
+        if (terrainColors[l1].x < virtualHeight) {
+
+            lColor = terrainColors[l1].yzw;
+            hColor = terrainColors[l1+1].yzw;
+
+            // lColor = vec3(0.0, 0.0, 0.0);
+            // hColor = vec3(1.0, 1.0, 1.0);
+
+            lH = terrainColors[l1].x;
+
+            hH = terrainColors[l1 + 1].x;
+
+            float h = blendRatio - (hH - virtualHeight);
+
+            if (hH - virtualHeight < blendRatio) {
+                blendedColor = mix(lColor, hColor, h/blendRatio);
+            } else {
+                blendedColor = lColor;
+            }
+            
         }
     }
+
+    gl_FragColor = vec4(vec3(blendedColor), 1.0) * addedLights;
     
 }`
     }

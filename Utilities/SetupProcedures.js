@@ -5,14 +5,12 @@ function setupRender() {
 }
 
 function addLights() {
-    var amblight = new THREE.AmbientLight(0xffffff, 0.2)
-    var playerLight = new THREE.DirectionalLight(0xffffff, 0.9)
-    playerLight.position.x = worldSize / 2
-    playerLight.position.y += 1.2 * magnitudeY
-    playerLight.position.z = worldSize / 2
+    var sun = new THREE.DirectionalLight(0xffffff, 1.0)
+    sun.position.x = worldSize / 2
+    sun.position.y += 1 * magnitudeY
+    sun.position.z = worldSize / 2
 
-    scene.add(playerLight)
-    scene.add(amblight)
+    scene.add(sun)
     
 }
 
