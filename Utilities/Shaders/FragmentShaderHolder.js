@@ -15,6 +15,7 @@ uniform float ambientLightIntensity;
 uniform float blendRatio;
 
 uniform sampler2D uTex;
+uniform sampler2D cTex;
 
 #if NUM_DIR_LIGHTS > 0 
     struct DirectionalLight {
@@ -75,8 +76,8 @@ void main()
             
         }
     }
-
-    gl_FragColor = vec4(vec3(blendedColor), 1.0) * addedLights;
+    vec3 finalCol = mix(texture2D(cTex, vUv).rgb, blendedColor.rgb, 0.95);
+    gl_FragColor = vec4(finalCol, 1.0) * addedLights;
     
 }`
     }

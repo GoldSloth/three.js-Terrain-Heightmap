@@ -125,11 +125,11 @@ class Terrain {
         // Grass
         this.terrainColours.push(new THREE.Vector4(0.2, 0.3, 0.7, 0.2))
         // Dark Grass
-        this.terrainColours.push(new THREE.Vector4(0.4, 0.2, 0.4, 0.15))
+        this.terrainColours.push(new THREE.Vector4(0.5, 0.2, 0.4, 0.15))
         // Light Rock
-        this.terrainColours.push(new THREE.Vector4(0.7, 0.4, 0.4, 0.4))
+        this.terrainColours.push(new THREE.Vector4(0.6, 0.4, 0.4, 0.4))
         // Dark Rock
-        this.terrainColours.push(new THREE.Vector4(0.8, 0.2, 0.2, 0.2))
+        this.terrainColours.push(new THREE.Vector4(0.7, 0.2, 0.2, 0.2))
 
         // this.terrainColours.push(new THREE.Vector4(0.0, 0.0, 0.0, 0.0))
         // this.terrainColours.push(new THREE.Vector4(0.25, 0.25, 0.25, 0.25))
@@ -165,13 +165,20 @@ class Terrain {
         this.VertShader = new VertexShader()
         this.FragShader = new FragmentShader(this.terrainColours)
 
-        var heightTextureSize = new THREE.Vector2(1024, 1024)
+        var heightTextureSize = new THREE.Vector2(2048, 2048)
+        var colourTextureSize = new THREE.Vector2(1024, 1024)
 
         var heightTexture = new RGBUInt8PerlinTexture(heightTextureSize)
-        heightTexture.makeFirstLayer(200, 0.75)
-        heightTexture.makeNewLayer(50, 0.25)
+        heightTexture.makeFirstLayer(150, 0.75)
+        heightTexture.makeNewLayer(7, 0.25)
 
         var rawHeightTexture = heightTexture.image
+
+        var colourTexture = new RGBUInt8PerlinTexture(colourTextureSize)
+        colourTexture.makeFirstLayer(100, 0.75)
+        colourTexture.makeNewLayer(5, 0.25)
+
+        var rawColourTexture = colourTexture.image
 
         this.material = new THREE.ShaderMaterial({
             uniforms: THREE.UniformsUtils.merge([
@@ -179,10 +186,11 @@ class Terrain {
                 {
                     'terrainColors': {value: this.terrainColours, type: 'v4v'},
                     'magnitudeY': {type: 'f', value: this.yAmplitude},
-                    'heightVariation': {type: 'f', value: 0.05},
+                    'heightVariation': {type: 'f', value: 0.1},
                     'uTex': {value: null},
-                    'ambientLightIntensity': {type: 'f', value: 0.15},
-                    'blendRatio': {type: "t", value: 0.04}
+                    'cTex': {value: null},
+                    'ambientLightIntensity': {type: 'f', value: 0.2},
+                    'blendRatio': {type: "t", value: 0.1}
                 }
             ]),
             lights: true,
@@ -192,9 +200,11 @@ class Terrain {
         })
 
         this.material.uniforms.uTex.value = rawHeightTexture
+        this.material.uniforms.cTex.value = rawColourTexture
         // this.material.uniforms.uTex.value.magFilter = THREE.NearestFilter
         // this.material.uniforms.uTex.value.minFilter = THREE.NearestFilter
         this.material.uniforms.uTex.value.needsUpdate = true
+        this.material.uniforms.cTex.value.needsUpdate = true
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         console.log(this.mesh)
         return this.mesh
