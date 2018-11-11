@@ -1,54 +1,65 @@
 class Terrain {
-    constructor(size, segments, type, yAmplitude, seed, perlinModifier) {
-        this.size = size
-        this.segments = segments
-        this.yAmplitude = yAmplitude
+    constructor(options) {
+        this.size = options.size
+        this.segments = options.segments
+        this.yAmplitude = options.yAmplitude
 
-        this.normalisedPerl = []
-        if (seed === undefined || seed === null) {
-            seed = Math.random()
-        }
-        if (perlinModifier === undefined || perlinModifier === null) {
-            perlinModifier = 1/200
-        }
+        this.perlins = options.perlins
 
+        this.normalisedPerl = new Array(this.segments * this.segments).fill(0)
 
-        if (type == "perlin") {
-            this._makeFromPerlin(seed, perlinModifier)
-        } else if (type == "image") {
-            this._makeFromImage()
+        if (options.type == "perlin") {
+            this._makeFromPerlin()
         } else {
             console.log("Terrain generation failed. Please specify a valid type.")
         }
-        // Chart mode: ACTIVATE
         
     }
 
-    _makeFromPerlin(seed, perlinModifier) {
-        var perlin1 = new SimplexNoise(seed)
+    _makeFromPerlin() {
         this.indices = []
         this.vertices = []
         this.normals = []
         this.uv = []
 
-        var halfSize = this.size/2
-        var segmentSize = this.size/this.segments
+        var halfSize = this.size / 2
+        var segmentSize = this.size / this.segments
 
-        var offsetFromOrig = Math.random()
         for (var i = 0; i <= this.segments; i++) {
             var z = (i * segmentSize) - halfSize
             for (var j = 0; j <= this.segments; j++) {
                 var x = (j * segmentSize) - halfSize
-                var rawPerlin = (perlin1.noise2D((x + offsetFromOrig) / perlinModifier, (z + offsetFromOrig) / perlinModifier) + 1) / 2
-
-                this.normalisedPerl.push(rawPerlin)
-
-                var y = rawPerlin  * magnitudeY
-                this.vertices.push(x, y, z)
-                this.uv.push(((x / this.segments) + 1) * 0.5, ((z / this.segments) + 1) * 0.5)
+                this.uv.push(((i / this.segments) + 1) * 0.5, ((j / this.segments) + 1) * 0.5)
                 this.normals.push(0 , 1, 0)
+                this.vertices.push(x, 0, z)
             }
         }
+        var perlin
+        for (let currentPerlin of this.perlins) {
+            perlin = new SimplexNoise(currentPerlin.seed)
+            
+            for (var i = 0; i < this.segments; i++) {
+
+                var z = (i * segmentSize) - halfSize
+
+                for (var j = 0; j < this.segments; j++) {
+
+                    var x = (j * segmentSize) - halfSize
+                    var rawPerlin = ((perlin.noise2D(x / currentPerlin.wavelength + 1000, z / currentPerlin.wavelength + 1000) + 1) / 2) * currentPerlin.multiplier
+
+                    this.normalisedPerl[i * (this.segments + 1) + j] += rawPerlin 
+
+                    this.vertices[(i * (this.segments + 1) + j) * 3 + 1] += rawPerlin
+
+                }
+            }
+        }
+
+        for (var i = 1; i < this.vertices.length; i += 3) {
+            this.vertices[i] *= this.yAmplitude
+
+        }
+        
     }
 
     _makeChart() {
@@ -107,34 +118,6 @@ class Terrain {
 
     _makeFromImage() {
         // 
-    }
-
-    formNormalDistribution() {
-
-    }
-
-    formSecondPerlin() {
-
-    }
-
-    enlistColourProfile() {
-        this.terrainColours = []
-        
-        // Sand
-        this.terrainColours.push(new THREE.Vector4(0.0, 0.9, 0.9, 0.7))
-        // Grass
-        this.terrainColours.push(new THREE.Vector4(0.2, 0.3, 0.7, 0.2))
-        // Dark Grass
-        this.terrainColours.push(new THREE.Vector4(0.5, 0.2, 0.4, 0.15))
-        // Light Rock
-        this.terrainColours.push(new THREE.Vector4(0.6, 0.4, 0.4, 0.4))
-        // Dark Rock
-        this.terrainColours.push(new THREE.Vector4(0.7, 0.2, 0.2, 0.2))
-
-        // this.terrainColours.push(new THREE.Vector4(0.0, 0.0, 0.0, 0.0))
-        // this.terrainColours.push(new THREE.Vector4(0.25, 0.25, 0.25, 0.25))
-        // this.terrainColours.push(new THREE.Vector4(0.5, 0.5, 0.5, 0.5))
-        // this.terrainColours.push(new THREE.Vector4(0.75, 0.75, 0.75, 0.75))
     }
 
     drawBufferGeometry() {

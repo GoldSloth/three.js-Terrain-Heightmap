@@ -17,8 +17,8 @@ const gravity = 5
 
 // World parameters
 
-const worldSize = 200
-const magnitudeY = 50
+const worldSize = 1000
+const magnitudeY = 150
 
 console.log("Total worldsize is " + worldSize.x + "m by " + worldSize.y + "m")
 
@@ -32,9 +32,49 @@ if (!isBrowserCompatible()) {
 
     setupRender()
     var seed = Math.random()
-    console.log(seed*1000)
-    var perlinTerrain = new Terrain(worldSize, 128, "perlin", magnitudeY, seed, 100)
-    perlinTerrain.enlistColourProfile()
+
+    var worldOptions = {
+        "size": worldSize,
+        "segments": 128,
+        "type": "perlin",
+        "yAmplitude": magnitudeY,
+        "seed": seed,
+        "perlins": [
+            {
+                "seed": Math.random(),
+                "multiplier": 0.6,
+                "wavelength": 300
+            },
+            {
+                "seed": Math.random(),
+                "multiplier": 0.2,
+                "wavelength": 100
+            },
+            {
+                "seed": Math.random(),
+                "multiplier": 0.1,
+                "wavelength": 50
+            }
+        ]
+    }
+
+
+
+    var perlinTerrain = new Terrain(worldOptions)
+    perlinTerrain.terrainColours = []
+    // Sea
+    perlinTerrain.terrainColours.push(new THREE.Vector4(0.0, 0.0, 0.0, 0.5))
+    // Sand
+    perlinTerrain.terrainColours.push(new THREE.Vector4(0.35, 0.9, 0.9, 0.7))
+    // Grass
+    perlinTerrain.terrainColours.push(new THREE.Vector4(0.4, 0.3, 0.7, 0.2))
+    // Dark Grass
+    perlinTerrain.terrainColours.push(new THREE.Vector4(0.6, 0.2, 0.4, 0.15))
+    // Light Rock
+    perlinTerrain.terrainColours.push(new THREE.Vector4(0.7, 0.4, 0.4, 0.4))
+    // Dark Rock
+    perlinTerrain.terrainColours.push(new THREE.Vector4(0.8, 0.2, 0.2, 0.2))
+
     perlinTerrain._makeChart()
     var TerrainMesh = perlinTerrain.drawBufferGeometry()
     scene.add(TerrainMesh)
