@@ -9,22 +9,32 @@
         <script src="https://threejs.org/examples/js/controls/PointerLockControls.js"></script>
         <script src="https://www.marvinj.org/releases/marvinj-0.7.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+        <!-- Only used for stats. -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
 <!--    Assets-->
         <script type="text/javascript" src="./Styles/terrain.json"></script>
         <script type="text/javascript" src="./Styles/vaporwaveTerrain.json"></script>
 
-<!--    Internal libraries-->
+<!--    Internal Shaders -->
+        <!--Vert-->
+        <script src="./Utilities/Shaders/VertexShaderHolder.js"></script>
+        <!--Frag-->
+        <script src="./Utilities/Shaders/FragmentShaderHolder.js"></script>
+
+<!--    Internal Libraries-->
         <script src="./Utilities/CompatibilityTools.js"></script>
         <script src="./Utilities/PlayerMovement.js"></script>
         <script src="./Utilities/PointerLockUtilities.js"></script>
         <script src="./Utilities/SetupProcedures.js"></script>
         <script src="./Utilities/CollisionUtils.js"></script>
-        <script src="./Utilities/Interpolation.js"></script>
-        
+        <script src="./Utilities/TextureUtilities.js"></script>
+        <!-- <script src="./Utilities/Interpolation.js"></script> Not actually used.-->
         <script src="./Utilities/TerrainUtilities/Terrain.js"></script>
-        <script src="./Utilities/TerrainUtilities/TerrainFromImage.js"></script>
-        <script src="./Utilities/TerrainUtilities/TerrainFromMath.js"></script>
+
+<!--    Procedures/Animations-->
+        <script src="./Utilities/Procedures/LoadingInfo.js"></script>
+
 
     </head>
     <body>

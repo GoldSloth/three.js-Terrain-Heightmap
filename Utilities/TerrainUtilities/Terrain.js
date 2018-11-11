@@ -1,76 +1,123 @@
 class Terrain {
-    constructor(size, segments, type, yAmplitude, seed, perlinModifier) {
-        this.size = size
-        this.segments = segments
-        this.yAmplitude = yAmplitude
+    constructor(options) {
+        this.size = options.size
+        this.segments = options.segments
+        this.yAmplitude = options.yAmplitude
 
-        if (seed === undefined || seed === null) {
-            seed = Math.random()
-        }
-        if (perlinModifier === undefined || perlinModifier === null) {
-            perlinModifier = 1/200
-        }
+        this.perlins = options.perlins
 
+        this.normalisedPerl = new Array(this.segments * this.segments).fill(0)
 
-        if (type == "perlin") {
-            this._makeFromPerlin(seed, perlinModifier)
-        } else if (type == "image") {
-            this._makeFromImage()
+        if (options.type == "perlin") {
+            this._makeFromPerlin()
         } else {
             console.log("Terrain generation failed. Please specify a valid type.")
         }
+        
     }
 
-    _makeFromPerlin(seed, perlinModifier) {
-        var perlin1 = new SimplexNoise(seed)
+    _makeFromPerlin() {
         this.indices = []
         this.vertices = []
         this.normals = []
-        this.colors = []
+        this.uv = []
 
-        var halfSize = this.size/2
-        var segmentSize = this.size/this.segments
+        var halfSize = this.size / 2
+        var segmentSize = this.size / this.segments
 
         for (var i = 0; i <= this.segments; i++) {
-            var y = (i * segmentSize) - halfSize
+            var z = (i * segmentSize) - halfSize
             for (var j = 0; j <= this.segments; j++) {
                 var x = (j * segmentSize) - halfSize
-                this.vertices.push(x, perlin1.noise2D(x/perlinModifier, y/perlinModifier) * this.yAmplitude, y)
-
+                this.uv.push(((i / this.segments) + 1) * 0.5, ((j / this.segments) + 1) * 0.5)
                 this.normals.push(0 , 1, 0)
-                // this.colors.push(1, 0, 1)
+                this.vertices.push(x, 0, z)
             }
         }
+        var perlin
+        for (let currentPerlin of this.perlins) {
+            perlin = new SimplexNoise(currentPerlin.seed)
+            
+            for (var i = 0; i < this.segments; i++) {
+
+                var z = (i * segmentSize) - halfSize
+
+                for (var j = 0; j < this.segments; j++) {
+
+                    var x = (j * segmentSize) - halfSize
+                    var rawPerlin = ((perlin.noise2D(x / currentPerlin.wavelength + 1000, z / currentPerlin.wavelength + 1000) + 1) / 2) * currentPerlin.multiplier
+
+                    this.normalisedPerl[i * (this.segments + 1) + j] += rawPerlin 
+
+                    this.vertices[(i * (this.segments + 1) + j) * 3 + 1] += rawPerlin
+
+                }
+            }
+        }
+
+        for (var i = 1; i < this.vertices.length; i += 3) {
+            this.vertices[i] *= this.yAmplitude
+
+        }
+        
+    }
+
+    _makeChart() {
+        var chartCanvas = document.createElement('canvas')
+        chartCanvas.setAttribute("id", "chartCanvas")
+        chartCanvas.style.cssText = 'position:absolute;width:50%;height:50%;'
+        document.body.appendChild(chartCanvas)
+
+        var chartElement = document.getElementById("chartCanvas").getContext("2d")
+        const subDivisions = 20
+        // 1 % increment must equal 0.
+        const increment = 1/subDivisions
+        var chartDataE = []
+        var labels = []
+        for (var i=0; i <= subDivisions; i++) {
+            chartDataE.push(0)
+            labels.push(i*increment)
+        }
+        for (var i=0; i < this.normalisedPerl.length; i++) {
+            for (var j=0; j < subDivisions; j++) {
+                if (this.normalisedPerl[i] > j * increment && this.normalisedPerl[i] < (j + 1) * increment) {
+                    chartDataE[j] += 1
+                    break
+                }
+            }
+            
+        }
+
+        var normalisedChartDataE = []
+        for (var i=0; i<chartDataE.length; i++) {
+            normalisedChartDataE.push((chartDataE[i]/this.normalisedPerl.length) * 100)
+        }
+        var chartData = {
+            "labels": labels,
+            datasets: [{
+                label: "Frequency",
+                data: normalisedChartDataE,
+                fill: false
+            }]
+        }
+
+        var distributionChart = new Chart(chartElement, {
+            type: 'line',
+            data: chartData,
+            options: {
+                animation: {
+                    duration: 0, // general animation time
+                },
+                hover: {
+                    animationDuration: 0, // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0, // animation duration after a resize
+            }
+        })
     }
 
     _makeFromImage() {
         // 
-    }
-
-    formNormalDistribution() {
-
-    }
-
-    formSecondPerlin() {
-
-    }
-
-    setColours(terrainStyle) {
-        for (var i=1; i<this.vertices.length; i+=3) {
-            var thisColor
-            for (var j=0; j<terrainStyle.length; j++) {
-                if (! (this.vertices[i] > terrainStyle[j])) {
-                    thisColor = terrainStyle[j].colour
-                }
-
-                // This will only do anything meaningful if the data is in ascending order
-            }
-            var thisColor = new THREE.Color(thisColor)
-            this.colors.push(thisColor.r, thisColor.g, thisColor.b)
-            // this.colors.push(1, 0, 1)
-
-        }
-        // console.log(this.colors)
     }
 
     drawBufferGeometry() {
@@ -88,18 +135,59 @@ class Terrain {
         this.geometry = new THREE.BufferGeometry()
 
         this.geometry.setIndex(this.indices);
-        this.geometry.addAttribute('position', new THREE.Float32BufferAttribute(this.vertices, 3));
-        this.geometry.addAttribute('normal', new THREE.Float32BufferAttribute(this.normals, 3));
-        this.geometry.addAttribute('color', new THREE.Float32BufferAttribute(this.colors, 3));
+        this.geometry.addAttribute('position', new THREE.Float32BufferAttribute(this.vertices, 3))
+        this.geometry.addAttribute('normal', new THREE.Float32BufferAttribute(this.normals, 3))
+        this.geometry.addAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2))
+
 
         this.geometry.computeVertexNormals()
-        // this.geometry.computeFaceNormals()
+        this.geometry.computeFaceNormals()
         this.geometry.computeBoundingBox()
         this.geometry.computeBoundingSphere()
 
-        this.material = new THREE.MeshLambertMaterial({
-            side: THREE.DoubleSide, vertexColors: THREE.VertexColors
+        this.VertShader = new VertexShader()
+        this.FragShader = new FragmentShader(this.terrainColours)
+
+        var heightTextureSize = new THREE.Vector2(2048, 2048)
+        var colourTextureSize = new THREE.Vector2(1024, 1024)
+
+        var heightTexture = new RGBUInt8PerlinTexture(heightTextureSize)
+        heightTexture.makeFirstLayer(150, 0.75)
+        heightTexture.makeNewLayer(7, 0.25)
+
+        var rawHeightTexture = heightTexture.image
+
+        var colourTexture = new RGBUInt8PerlinTexture(colourTextureSize)
+        colourTexture.makeFirstLayer(100, 0.75)
+        colourTexture.makeNewLayer(5, 0.25)
+
+        var rawColourTexture = colourTexture.image
+
+        this.material = new THREE.ShaderMaterial({
+            uniforms: THREE.UniformsUtils.merge([
+                THREE.UniformsLib['lights'],
+                {
+                    'terrainColors': {value: this.terrainColours, type: 'v4v'},
+                    'magnitudeY': {type: 'f', value: this.yAmplitude},
+                    'heightVariation': {type: 'f', value: 0.1},
+                    'uTex': {value: null},
+                    'cTex': {value: null},
+                    'ambientLightIntensity': {type: 'f', value: 0.2},
+                    'blendRatio': {type: "t", value: 0.1}
+                }
+            ]),
+            lights: true,
+            vertexShader: this.VertShader.getText(),
+            fragmentShader: this.FragShader.getText()
+ 
         })
+
+        this.material.uniforms.uTex.value = rawHeightTexture
+        this.material.uniforms.cTex.value = rawColourTexture
+        // this.material.uniforms.uTex.value.magFilter = THREE.NearestFilter
+        // this.material.uniforms.uTex.value.minFilter = THREE.NearestFilter
+        this.material.uniforms.uTex.value.needsUpdate = true
+        this.material.uniforms.cTex.value.needsUpdate = true
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         console.log(this.mesh)
         return this.mesh
