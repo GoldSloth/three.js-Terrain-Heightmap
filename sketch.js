@@ -35,7 +35,7 @@ if (!isBrowserCompatible()) {
 
     var worldOptions = {
         "size": worldSize,
-        "segments": 128,
+        "segments": 600,
         "type": "perlin",
         "yAmplitude": magnitudeY,
         "seed": seed,

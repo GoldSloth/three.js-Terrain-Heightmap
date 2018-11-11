@@ -148,8 +148,8 @@ class Terrain {
         this.VertShader = new VertexShader()
         this.FragShader = new FragmentShader(this.terrainColours)
 
-        var heightTextureSize = new THREE.Vector2(2048, 2048)
-        var colourTextureSize = new THREE.Vector2(1024, 1024)
+        var heightTextureSize = new THREE.Vector2(4096, 4096)
+        var colourTextureSize = new THREE.Vector2(4096, 4096)
 
         var heightTexture = new RGBUInt8PerlinTexture(heightTextureSize)
         heightTexture.makeFirstLayer(150, 0.75)
