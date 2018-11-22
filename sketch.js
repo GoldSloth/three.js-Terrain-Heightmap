@@ -1,14 +1,11 @@
 const goldenRatio = 1.618033988749895
 const iGoldenRatio = 1/goldenRatio
-console.log(iGoldenRatio)
 
 var performanceTest = true
 
 var pointerLockElement = document.body
 
 var scene = new THREE.Scene();
-var width = 1920;
-var height = 800;
 var camera = new THREE.PerspectiveCamera(75, (window.innerWidth * 0.95) / (window.innerHeight * 0.95), 0.1, 10000);
 var controls
 var prevTime = performance.now();
@@ -37,29 +34,13 @@ if (!isBrowserCompatible()) {
     setupRender()
     var seed = Math.random()
 
-    const distribute = (value) => {
-        if (value > 0.001) {
-            return (1/(value + iGoldenRatio)) - iGoldenRatio
-        } else {
-            return value
-        }
-    }
-
-    const distribute2 = (value) => {
-        if (value > 0.001) {
-            return (1/(Math.pow(value, 0.5) - goldenRatio)) + goldenRatio
-        } else {
-            return value
-        }
-    }
-
     var worldOptions = {
         "size": worldSize,
         "segments": 60,
         "type": "perlin",
         "yAmplitude": magnitudeY,
         "seed": seed,
-        "operation": distribute,
+        "operation": lDistribute,
         "perlins": [
             {
                 "seed": Math.random(),
