@@ -1,3 +1,7 @@
+const goldenRatio = 1.618033988749895
+const iGoldenRatio = 1/goldenRatio
+console.log(iGoldenRatio)
+
 var performanceTest = true
 
 var pointerLockElement = document.body
@@ -33,12 +37,29 @@ if (!isBrowserCompatible()) {
     setupRender()
     var seed = Math.random()
 
+    const distribute = (value) => {
+        if (value > 0.001) {
+            return (1/(value + iGoldenRatio)) - iGoldenRatio
+        } else {
+            return value
+        }
+    }
+
+    const distribute2 = (value) => {
+        if (value > 0.001) {
+            return (1/(Math.pow(value, 0.5) - goldenRatio)) + goldenRatio
+        } else {
+            return value
+        }
+    }
+
     var worldOptions = {
         "size": worldSize,
-        "segments": 600,
+        "segments": 60,
         "type": "perlin",
         "yAmplitude": magnitudeY,
         "seed": seed,
+        "operation": distribute,
         "perlins": [
             {
                 "seed": Math.random(),
@@ -61,6 +82,7 @@ if (!isBrowserCompatible()) {
 
 
     var perlinTerrain = new Terrain(worldOptions)
+
     perlinTerrain.terrainColours = []
     // Sea
     perlinTerrain.terrainColours.push(new THREE.Vector4(0.0, 0.0, 0.0, 0.5))

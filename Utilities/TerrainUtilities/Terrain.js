@@ -5,6 +5,7 @@ class Terrain {
         this.yAmplitude = options.yAmplitude
 
         this.perlins = options.perlins
+        this.operation = options.operation
 
         this.normalisedPerl = new Array(this.segments * this.segments).fill(0)
 
@@ -56,9 +57,17 @@ class Terrain {
         }
 
         for (var i = 1; i < this.vertices.length; i += 3) {
+            this.vertices[i] = this.operation(this.vertices[i])
+        }
+
+        console.log(this.vertices)
+
+        for (var i = 1; i < this.vertices.length; i += 3) {
             this.vertices[i] *= this.yAmplitude
 
         }
+
+
         
     }
 
@@ -116,10 +125,6 @@ class Terrain {
         })
     }
 
-    _makeFromImage() {
-        // 
-    }
-
     drawBufferGeometry() {
         for (var i = 0; i < this.segments; i++) {
             for (var j = 0; j < this.segments; j++) {
@@ -148,8 +153,8 @@ class Terrain {
         this.VertShader = new VertexShader()
         this.FragShader = new FragmentShader(this.terrainColours)
 
-        var heightTextureSize = new THREE.Vector2(4096, 4096)
-        var colourTextureSize = new THREE.Vector2(4096, 4096)
+        var heightTextureSize = new THREE.Vector2(1024, 1024)
+        var colourTextureSize = new THREE.Vector2(1024, 1024)
 
         var heightTexture = new RGBUInt8PerlinTexture(heightTextureSize)
         heightTexture.makeFirstLayer(150, 0.75)
@@ -169,7 +174,7 @@ class Terrain {
                 {
                     'terrainColors': {value: this.terrainColours, type: 'v4v'},
                     'magnitudeY': {type: 'f', value: this.yAmplitude},
-                    'heightVariation': {type: 'f', value: 0.1},
+                    'heightVariation': {type: 'f', value: 0.05},
                     'uTex': {value: null},
                     'cTex': {value: null},
                     'ambientLightIntensity': {type: 'f', value: 0.2},
