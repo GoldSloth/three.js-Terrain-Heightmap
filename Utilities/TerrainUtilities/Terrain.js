@@ -60,8 +60,6 @@ class Terrain {
             this.vertices[i] = this.operation(this.vertices[i])
         }
 
-        console.log(this.vertices)
-
         for (var i = 1; i < this.vertices.length; i += 3) {
             this.vertices[i] *= this.yAmplitude
 
@@ -194,7 +192,6 @@ class Terrain {
         this.material.uniforms.uTex.value.needsUpdate = true
         this.material.uniforms.cTex.value.needsUpdate = true
         this.mesh = new THREE.Mesh(this.geometry, this.material)
-        console.log(this.mesh)
         return this.mesh
     }
 }

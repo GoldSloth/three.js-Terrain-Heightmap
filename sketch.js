@@ -1,6 +1,8 @@
 const goldenRatio = 1.618033988749895
 const iGoldenRatio = 1/goldenRatio
 
+const scaleRatio = 1.8
+
 var performanceTest = true
 
 var pointerLockElement = document.body
@@ -21,7 +23,7 @@ const gravity = 5
 const worldSize = 1000
 const magnitudeY = 150
 
-console.log("Total worldsize is " + worldSize.x + "m by " + worldSize.y + "m")
+console.log("Total worldsize is " + worldSize + "m by " + worldSize + "m")
 
 if (!isBrowserCompatible()) {
     console.log("Sorry, this browser is not compatible.")
@@ -45,17 +47,17 @@ if (!isBrowserCompatible()) {
             {
                 "seed": Math.random(),
                 "multiplier": 0.6,
-                "wavelength": 300
+                "wavelength": 300 * scaleRatio
             },
             {
                 "seed": Math.random(),
                 "multiplier": 0.2,
-                "wavelength": 100
+                "wavelength": 100 * scaleRatio
             },
             {
                 "seed": Math.random(),
                 "multiplier": 0.1,
-                "wavelength": 50
+                "wavelength": 50 * scaleRatio
             }
         ]
     }
@@ -81,6 +83,8 @@ if (!isBrowserCompatible()) {
     perlinTerrain._makeChart()
     var TerrainMesh = perlinTerrain.drawBufferGeometry()
     scene.add(TerrainMesh)
+
+    LoadObjects()
 
     addLights()
 

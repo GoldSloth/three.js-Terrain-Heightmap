@@ -9,7 +9,6 @@ class RGBUInt8PerlinTexture {
         let ns = 0
         let slide = 0
         var currentPerlin = new SimplexNoise(Math.random())
-        console.log(currentPerlin)
         for (var x = 0; x <= this.size.x; x++) {
             for (var y = 0; y <= this.size.y; y++) {
                 ns = ((currentPerlin.noise2D(x/frequency, y/frequency) + 1) / 2) * amplitude
