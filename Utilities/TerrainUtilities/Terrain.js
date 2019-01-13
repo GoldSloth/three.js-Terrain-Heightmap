@@ -1,3 +1,5 @@
+// Main class responsible for generating terrain
+
 class Terrain {
     constructor(options) {
         this.size = options.size
@@ -15,6 +17,16 @@ class Terrain {
             console.log("Terrain generation failed. Please specify a valid type.")
         }
         
+        this._rawData = []
+        for (var x = 0; x < this.segments; x++) {
+            var temp = []
+            for (var y = 0; y < this.segments; y++) {
+                temp.push(1)
+            }
+            this._rawData.push(temp)
+        }
+
+        console.log(this._rawData[0][0])
     }
 
     _makeFromPerlin() {
@@ -24,12 +36,12 @@ class Terrain {
         this.uv = []
 
         var halfSize = this.size / 2
-        var segmentSize = this.size / this.segments
+        this.segmentSize = this.size / this.segments
 
         for (var i = 0; i <= this.segments; i++) {
-            var z = (i * segmentSize) - halfSize
+            var z = (i * this.segmentSize) - halfSize
             for (var j = 0; j <= this.segments; j++) {
-                var x = (j * segmentSize) - halfSize
+                var x = (j * this.segmentSize) - halfSize
                 this.uv.push(((i / this.segments) + 1) * 0.5, ((j / this.segments) + 1) * 0.5)
                 this.normals.push(0 , 1, 0)
                 this.vertices.push(x, 0, z)
@@ -40,20 +52,20 @@ class Terrain {
             perlin = new SimplexNoise(currentPerlin.seed)
             
             for (var i = 0; i < this.segments; i++) {
-
-                var z = (i * segmentSize) - halfSize
+                var z = (i * this.segmentSize) - halfSize
 
                 for (var j = 0; j < this.segments; j++) {
 
-                    var x = (j * segmentSize) - halfSize
+                    var x = (j * this.segmentSize) - halfSize
                     var rawPerlin = ((perlin.noise2D(x / currentPerlin.wavelength + 1000, z / currentPerlin.wavelength + 1000) + 1) / 2) * currentPerlin.multiplier
-
+                    // this._rawData[i][j] = rawPerlin
                     this.normalisedPerl[i * (this.segments + 1) + j] += rawPerlin 
 
                     this.vertices[(i * (this.segments + 1) + j) * 3 + 1] += rawPerlin
 
                 }
             }
+
         }
 
         for (var i = 1; i < this.vertices.length; i += 3) {
@@ -67,6 +79,14 @@ class Terrain {
 
 
         
+    }
+
+    cleanData() {
+        return this._rawData
+    }
+
+    scaleFactor() {
+        return this.segmentSize
     }
 
     _makeChart() {

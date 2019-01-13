@@ -5,16 +5,16 @@
         <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
         <style> body {padding: 0; margin: 0;} </style>
 <!--    External libraries: Only use urls/cdn links-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/PointerLockControls.js"></script>
-        <script src="https://www.marvinj.org/releases/marvinj-0.7.js"></script>
+        <!-- <script src="https://www.marvinj.org/releases/marvinj-0.7.js"></script> -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
         <!-- Only used for stats. -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
 <!--    External Libraries used in scene objects-->
         <!-- Tree.js -->
-        <script src="https://cdn.jsdelivr.net/gh/GolddolphinSKB-Fexcraftian/cylinders.js@latest/Library/Cylinder.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/GolddolphinSKB-Fexcraftian/cylinders.js@92222175a8a3ebd89095a2f2ee0e3a5adbd51757/Library/Cylinder.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@latest/examples/js/geometries/ConvexGeometry.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@latest/examples/js/QuickHull.js"></script>
 
@@ -35,6 +35,8 @@
         <script src="./Utilities/SetupProcedures.js"></script>
         <script src="./Utilities/CollisionUtils.js"></script>
         <script src="./Utilities/TextureUtilities.js"></script>
+        <script src="./Utilities/InterpolationTools.js"></script>
+        <script src="./Utilities/MapTools.js"></script>
         <!-- <script src="./Utilities/Interpolation.js"></script> Not actually used.-->
         <script src="./Utilities/TerrainUtilities/Terrain.js"></script>
         <!-- External thingos for "special" stuff -->
@@ -48,12 +50,12 @@
 
 <!--    Scripts defining "custom" things, e.g. Distribution functions.-->
         <script src="./Scripts/DistributionScripts.js"></script>
-
-
+        <script src="./Scripts/ObjectPlacement/TreePlacementScripts.js"></script>
+        
     </head>
     <body>
 <!--    The "main" javascript file-->
         <div id="render"></div>
-        <script src="sketch.js"></script>
+        <script src="main.js"></script>
     </body>
 </html>

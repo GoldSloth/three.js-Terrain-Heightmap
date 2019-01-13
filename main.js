@@ -13,6 +13,8 @@ var controls
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 var renderer = new THREE.WebGLRenderer();
+var mapTools
+var TerrainMesh
 
 var collider
 
@@ -81,9 +83,11 @@ if (!isBrowserCompatible()) {
     perlinTerrain.terrainColours.push(new THREE.Vector4(0.8, 0.2, 0.2, 0.2))
 
     perlinTerrain._makeChart()
-    var TerrainMesh = perlinTerrain.drawBufferGeometry()
+    TerrainMesh = perlinTerrain.drawBufferGeometry()
     scene.add(TerrainMesh)
 
+    mapTools = new MapTools(worldSize, magnitudeY, perlinTerrain)
+    mapTools.makeMap()
     LoadObjects()
 
     addLights()

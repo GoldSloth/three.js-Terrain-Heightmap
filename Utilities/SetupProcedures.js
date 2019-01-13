@@ -5,11 +5,12 @@ function setupRender() {
 }
 
 function addLights() {
+    var ambLighting = new THREE.AmbientLight(0xffffff, 0.3)
     var sun = new THREE.DirectionalLight(0xffffff, 1.0)
     sun.position.x = worldSize / 2
     sun.position.y += 1 * magnitudeY
     sun.position.z = worldSize / 2
-
+    scene.add(ambLighting)
     scene.add(sun)
     
 }

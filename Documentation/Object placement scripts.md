@@ -1,0 +1,2 @@
+# Object placement script specification
+
