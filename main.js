@@ -40,7 +40,7 @@ if (!isBrowserCompatible()) {
 
     var worldOptions = {
         "size": worldSize,
-        "segments": 60,
+        "segments": 50,
         "type": "perlin",
         "yAmplitude": magnitudeY,
         "seed": seed,
@@ -86,7 +86,7 @@ if (!isBrowserCompatible()) {
     TerrainMesh = perlinTerrain.drawBufferGeometry()
     scene.add(TerrainMesh)
 
-    mapTools = new MapTools(worldSize, magnitudeY, perlinTerrain, 0.1)
+    mapTools = new MapTools(worldSize, magnitudeY, perlinTerrain, 50)
     mapTools.makeMap()
     mapTools.drawHelper()
     LoadObjects()
