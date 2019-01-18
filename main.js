@@ -86,8 +86,9 @@ if (!isBrowserCompatible()) {
     TerrainMesh = perlinTerrain.drawBufferGeometry()
     scene.add(TerrainMesh)
 
-    mapTools = new MapTools(worldSize, magnitudeY, perlinTerrain)
+    mapTools = new MapTools(worldSize, magnitudeY, perlinTerrain, 0.1)
     mapTools.makeMap()
+    mapTools.drawHelper()
     LoadObjects()
 
     addLights()

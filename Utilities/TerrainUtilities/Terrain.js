@@ -11,22 +11,22 @@ class Terrain {
 
         this.normalisedPerl = new Array(this.segments * this.segments).fill(0)
 
+        this._rawData = []
+        for (var x = 0; x < this.segments; x++) {
+            var temp = []
+            for (var y = 0; y < this.segments; y++) {
+                temp.push(0)
+            }
+            this._rawData.push(temp)
+        }
+
         if (options.type == "perlin") {
             this._makeFromPerlin()
         } else {
             console.log("Terrain generation failed. Please specify a valid type.")
         }
         
-        this._rawData = []
-        for (var x = 0; x < this.segments; x++) {
-            var temp = []
-            for (var y = 0; y < this.segments; y++) {
-                temp.push(1)
-            }
-            this._rawData.push(temp)
-        }
 
-        console.log(this._rawData[0][0])
     }
 
     _makeFromPerlin() {
@@ -58,7 +58,7 @@ class Terrain {
 
                     var x = (j * this.segmentSize) - halfSize
                     var rawPerlin = ((perlin.noise2D(x / currentPerlin.wavelength + 1000, z / currentPerlin.wavelength + 1000) + 1) / 2) * currentPerlin.multiplier
-                    // this._rawData[i][j] = rawPerlin
+                    this._rawData[i][j] += rawPerlin
                     this.normalisedPerl[i * (this.segments + 1) + j] += rawPerlin 
 
                     this.vertices[(i * (this.segments + 1) + j) * 3 + 1] += rawPerlin
