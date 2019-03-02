@@ -60,4 +60,8 @@ class MapTools {
         var mTHMESH = new THREE.Mesh(mTHG, mTHM)
         scene.add(mTHMESH)
     }
+
+    getInterpHeight() {
+        // (Something to put me off doing this)
+    }
 }

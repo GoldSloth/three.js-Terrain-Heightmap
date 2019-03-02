@@ -32,9 +32,9 @@ class TreeLoader {
         this.treePositions = []
         for (var tree of this.trees) {
             var newPos = program(this.treePositions, perams)
-            this.treePositions.push(newPos)
             // Internal map is not accurate enough to allign to terrain.
             newPos.y = GetHeight(newPos, true) - 1
+            this.treePositions.push(newPos.clone())
             // -1 will make sure that it's actually in the ground, and not doing floaty stuff.
             // var axesHelper = new THREE.AxesHelper(50);
             // axesHelper.position.copy(newPos)

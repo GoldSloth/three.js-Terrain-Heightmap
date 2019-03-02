@@ -61,12 +61,12 @@ const treeArgs = [
 function LoadObjects() {
     const placementArgs = {
         "worldSize": worldSize,
-        "bufferZone": 20,
+        "bufferZone": 40,
     }
 
     var Tree1 = new TreeLoader(
         treeArgs[0],
-        1,
+        10,
         {
             sphereRes: 10,
             cRes: 10,

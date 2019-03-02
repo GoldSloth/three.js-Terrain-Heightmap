@@ -7,13 +7,13 @@ function BasicObjectPlacer(existingObjects, perams) {
 
     while (!isGood) {
         var attemptedPosition = new THREE.Vector3(
-            ((Math.random() * worldSize) / 2) - (worldSize / 4),
+            (worldSize / 4) - ((Math.random() * worldSize) / 2),
             100,
-            ((Math.random() * worldSize) / 2) - (worldSize / 4)
+            (worldSize / 4) - ((Math.random() * worldSize) / 2)
         )
         console.log(attemptedPosition)
-        for (var obj in existingObjects) {
-            if (obj.position.distanceToSquared(attemptedPosition) < _bufferZoneSq) {
+        for (var position of existingObjects) {
+            if (position.distanceToSquared(attemptedPosition) < _bufferZoneSq) {
                 break
             }
         }
