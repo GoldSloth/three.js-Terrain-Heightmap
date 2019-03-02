@@ -7,9 +7,9 @@ function BasicObjectPlacer(existingObjects, perams) {
 
     while (!isGood) {
         var attemptedPosition = new THREE.Vector3(
-            (worldSize / 4) - ((Math.random() * worldSize) / 2),
+            (worldSize / 2) - ((Math.random() * worldSize)),
             100,
-            (worldSize / 4) - ((Math.random() * worldSize) / 2)
+            (worldSize / 2) - ((Math.random() * worldSize))
         )
         console.log(attemptedPosition)
         for (var position of existingObjects) {
