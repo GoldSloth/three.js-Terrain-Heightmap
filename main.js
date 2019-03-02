@@ -88,7 +88,7 @@ if (!isBrowserCompatible()) {
 
     mapTools = new MapTools(worldSize, magnitudeY, perlinTerrain, 50)
     mapTools.makeMap()
-    mapTools.drawHelper()
+    // mapTools.drawHelper()
     LoadObjects()
 
     addLights()

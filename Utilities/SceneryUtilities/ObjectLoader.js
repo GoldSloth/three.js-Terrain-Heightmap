@@ -4,11 +4,13 @@ const treeArgs = [
         leafAngle: {x: 22.5, y: 22.5, z: 22.5},
         stochasticSymbols: {
             'a': 0.5,
-            'b': 0.25
+            'b': 0.25,
+            'c': 0.02,
+            'd': 0.98
         },
-        forwardMovement: 30,
-        leafLength: 0.1,
-        branchWidth: 5,
+        forwardMovement: 15,
+        leafLength: 0.05,
+        branchWidth: 3,
         iterations: 15,
         axiom: ['A'],
         rules: {

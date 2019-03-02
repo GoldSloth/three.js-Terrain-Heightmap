@@ -33,7 +33,13 @@ class TreeLoader {
         for (var tree of this.trees) {
             var newPos = program(this.treePositions, perams)
             this.treePositions.push(newPos)
-            tree.treeMesh.position.add(newPos)
+            // Internal map is not accurate enough to allign to terrain.
+            newPos.y = GetHeight(newPos, true) - 1
+            // -1 will make sure that it's actually in the ground, and not doing floaty stuff.
+            // var axesHelper = new THREE.AxesHelper(50);
+            // axesHelper.position.copy(newPos)
+            // scene.add(axesHelper);
+            tree.treeMesh.position.copy(newPos)
         }
     }
 }
